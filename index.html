@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Organize</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      background-color: floralwhite;
+      color: black;
+
+      /* Background image settings */
+      background-image: url("SteelMillWrk.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+
+      margin: 0;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* Top-left logo wrapper with white box */
+    .logo-left-wrapper {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      background-color: white;       /* white box behind logo */
+      padding: 10px;                 /* spacing around logo */
+      border-radius: 0;              /* rigid edges */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* subtle shadow */
+      display: inline-block;
+    }
+
+    .logo-left-wrapper img {
+      width: 150px;
+      height: auto;
+      display: block;
+    }
+
+    /* Top-right Discord section */
+    .discord-section {
+      position: absolute;
+      top: 25px; /* same vertical as left logo */
+      right: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .discord-text {
+      font-size: 1em;
+      color: black;
+      background-color: white;  /* white box behind text */
+      padding: 5px 10px;
+      border-radius: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      margin-bottom: 5px;
+    }
+
+    .discord-button img {
+      width: 120px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .discord-button img:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    /* Main title box — rigid edges */
+    h1 {
+      color: black;
+      background-color: white;
+      display: inline-block;
+      padding: 20px 40px;
+      border-radius: 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      margin: 200px 0 0 0; /* pushes title down */
+    }
+
+    /* Subtle bottom-center footer text */
+    .footer-text {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75em;
+      color: gray;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🌟 Top-left logo with white box -->
+  <div class="logo-left-wrapper">
+    <img src="ACP.png" alt="ACP Logo">
+  </div>
+
+  <!-- 🌟 Top-right Discord section -->
+  <div class="discord-section">
+    <div class="discord-text">Get Organized:</div>
+    <a href="https://discord.gg/3wnU8xNbsR" target="_blank" rel="noopener noreferrer" class="discord-button" title="Join our Discord!">
+      <img src="disc.png" alt="Discord Invite">
+    </a>
+  </div>
+
+  <!-- 🏗️ Centered main message -->
+  <h1>Let's Build a Stronger Community, Together!</h1>
+
+  <!-- 👇 Subtle footer -->
+  <p class="footer-text">Hosted without corporate nonsense.</p>
+</body>
+</html>
