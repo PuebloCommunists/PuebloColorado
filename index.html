@@ -29,9 +29,26 @@
       top: 25px;
       left: 25px;
       display: inline-block;
+      z-index: 10;
     }
 
-    .logo-left-inner {
+    .logo-double-back {
+      position: relative;
+      display: inline-block;
+    }
+
+    .logo-back-black {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 172px;
+      padding: 12px;
+      background-color: black;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    .logo-back-white {
       position: relative;
       display: inline-block;
       padding: 10px;
@@ -39,19 +56,7 @@
       z-index: 2;
     }
 
-    .logo-left-inner::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: calc(100% + 16px);
-      height: calc(100% + 16px);
-      background-color: black;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-    }
-
-    .logo-left-inner img {
+    .logo-back-white img {
       width: 150px;
       height: auto;
       display: block;
@@ -205,9 +210,13 @@
   </style>
 </head>
 <body>
+
   <div class="logo-left-wrapper">
-    <div class="logo-left-inner">
-      <img src="ACP.png" alt="ACP Logo">
+    <div class="logo-double-back">
+      <div class="logo-back-black"></div>
+      <div class="logo-back-white">
+        <img src="ACP.png" alt="ACP Logo">
+      </div>
     </div>
   </div>
 
@@ -229,5 +238,6 @@
   </div>
 
   <p class="footer-text">Hosted without corporate nonsense.</p>
+
 </body>
 </html>
