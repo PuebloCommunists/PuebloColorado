@@ -43,7 +43,6 @@
     /* Backing layers */
     .backing-box {
       position: absolute;
-      top: 0;
       left: 50%;
       transform: translateX(-50%);
       border-radius: 0;
@@ -55,9 +54,7 @@
       padding: 40px 30px;
       background-color: black;
       z-index: 1;
-      top: -10px; /* slight upward offset for overlap */
-      left: 50%;
-      transform: translateX(-50%);
+      top: -10px;
     }
 
     .red-bg {
@@ -66,15 +63,13 @@
       padding: 40px 30px;
       background-color: red;
       z-index: 2;
-      top: -5px; /* slight upward offset */
-      left: 50%;
-      transform: translateX(-50%);
+      top: -5px;
     }
 
     .white-bg {
       position: relative;
       width: 100%;
-      max-width: 800px;
+      max-width: 840px;
       padding: 40px 30px;
       background-color: white;
       z-index: 3;
@@ -96,6 +91,7 @@
       color: white;
       text-decoration: none;
       font-size: 1em;
+      font-weight: bold;
       cursor: pointer;
       transition: background-color 0.2s ease, transform 0.2s ease;
     }
