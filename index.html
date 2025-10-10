@@ -24,7 +24,7 @@
       animation: fadeInBackground 2s ease forwards;
     }
 
-    /* Double-backed ACP Logo */
+    /* Triple-backed ACP Logo */
     .logo-left-wrapper {
       position: absolute;
       top: 25px;
@@ -41,12 +41,24 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 174px;
+      width: 178px;
       height: auto;
-      padding: 16px;
+      padding: 18px;
       background-color: black;
       transform: translate(-50%, -50%);
       z-index: 1;
+    }
+
+    .logo-red {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 174px;
+      height: auto;
+      padding: 12px;
+      background-color: red;
+      transform: translate(-50%, -50%);
+      z-index: 2;
     }
 
     .logo-white {
@@ -54,7 +66,7 @@
       display: inline-block;
       padding: 12px;
       background-color: white;
-      z-index: 2;
+      z-index: 3;
     }
 
     .logo-white img {
@@ -218,6 +230,7 @@
   <div class="logo-left-wrapper">
     <div class="logo-container">
       <div class="logo-black"></div>
+      <div class="logo-red"></div>
       <div class="logo-white">
         <img src="ACP.png" alt="ACP Logo">
       </div>
