@@ -27,49 +27,54 @@
     }
 
     .triple-backed-container {
-      display: inline-block;
-      text-align: center;
-      max-width: 800px;
       position: relative;
+      display: inline-block;
+      max-width: 800px;
+      text-align: center;
     }
 
-    .layer {
-      padding: 40px 30px;
-      box-sizing: border-box;
-      width: 100%;
-      margin: 0;
+    /* Backing layers */
+    .backing-box {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 0;
     }
 
     .black-bg {
+      width: 100%;
+      height: 100%;
+      max-width: 880px;
+      padding: 40px 30px;
       background-color: black;
-      color: black;
-      position: relative;
-      top: 8px;
-      left: 8px;
       z-index: 1;
     }
 
     .red-bg {
+      width: 100%;
+      height: 100%;
+      max-width: 860px;
+      padding: 40px 30px;
       background-color: red;
-      color: black;
-      position: relative;
-      top: -50px;
-      left: -8px;
       z-index: 2;
     }
 
     .white-bg {
-      background-color: white;
-      color: black;
       position: relative;
-      top: -50px;
+      width: 100%;
+      max-width: 800px;
+      padding: 40px 30px;
+      background-color: white;
       z-index: 3;
+      box-sizing: border-box;
     }
 
     .mission-text {
       font-size: 1.2em;
       line-height: 1.6em;
       text-align: center;
+      margin: 0;
     }
 
     .back-button {
@@ -95,9 +100,9 @@
   <h1>Our Mission Statement</h1>
 
   <div class="triple-backed-container">
-    <div class="layer black-bg"></div>
-    <div class="layer red-bg"></div>
-    <div class="layer white-bg">
+    <div class="backing-box black-bg"></div>
+    <div class="backing-box red-bg"></div>
+    <div class="white-bg">
       <p class="mission-text">
         We strive to build a stronger community by connecting people, sharing knowledge, and supporting one another in meaningful ways. Our mission is to create a safe, welcoming space where everyone can grow together and make a positive impact.
       </p>
