@@ -23,62 +23,58 @@
     }
 
     h1 {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
-    .triple-backed {
-      position: relative;
-      display: block;
+    .triple-backed-container {
+      display: inline-block;
+      text-align: center;
       max-width: 800px;
-      margin: 0 auto 30px auto;
+      position: relative;
     }
 
-    .triple-backed .layer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
+    .layer {
+      padding: 40px 30px;
       box-sizing: border-box;
+      width: 100%;
+      margin: 0;
     }
 
     .black-bg {
       background-color: black;
-      padding: 40px 20px;
+      color: black;
+      position: relative;
+      top: 8px;
+      left: 8px;
       z-index: 1;
-      width: 100%;
-      max-width: 880px;
     }
 
     .red-bg {
       background-color: red;
-      padding: 40px 20px;
+      color: black;
+      position: relative;
+      top: -50px;
+      left: -8px;
       z-index: 2;
-      width: 100%;
-      max-width: 860px;
     }
 
     .white-bg {
-      position: relative;
       background-color: white;
-      padding: 40px 30px;
+      color: black;
+      position: relative;
+      top: -50px;
       z-index: 3;
-      width: 100%;
-      max-width: 800px;
-      box-sizing: border-box;
     }
 
     .mission-text {
       font-size: 1.2em;
       line-height: 1.6em;
-      color: black;
       text-align: center;
-      word-wrap: break-word;
     }
 
     .back-button {
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 30px;
       padding: 15px 30px;
       background-color: black;
       color: white;
@@ -98,7 +94,7 @@
 
   <h1>Our Mission Statement</h1>
 
-  <div class="triple-backed">
+  <div class="triple-backed-container">
     <div class="layer black-bg"></div>
     <div class="layer red-bg"></div>
     <div class="layer white-bg">
