@@ -24,44 +24,46 @@
       animation: fadeInBackground 2s ease forwards;
     }
 
+    /* Double-backed ACP Logo */
     .logo-left-wrapper {
       position: absolute;
       top: 25px;
       left: 25px;
-      display: inline-block;
       z-index: 10;
     }
 
-    .logo-double-back {
+    .logo-container {
       position: relative;
       display: inline-block;
     }
 
-    .logo-back-black {
+    .logo-black {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 172px;
-      padding: 12px;
+      width: 174px;
+      height: auto;
+      padding: 16px;
       background-color: black;
       transform: translate(-50%, -50%);
       z-index: 1;
     }
 
-    .logo-back-white {
+    .logo-white {
       position: relative;
       display: inline-block;
-      padding: 10px;
+      padding: 12px;
       background-color: white;
       z-index: 2;
     }
 
-    .logo-back-white img {
+    .logo-white img {
       width: 150px;
       height: auto;
       display: block;
     }
 
+    /* Discord section */
     .discord-section {
       position: absolute;
       top: 25px;
@@ -119,6 +121,7 @@
       opacity: 0.9;
     }
 
+    /* Main content */
     .main-content {
       display: flex;
       flex-direction: column;
@@ -174,6 +177,7 @@
       padding: 15px 30px;
       background-color: black;
       color: white;
+      font-weight: bold;
       font-size: 1em;
       text-decoration: none;
       cursor: pointer;
@@ -212,9 +216,9 @@
 <body>
 
   <div class="logo-left-wrapper">
-    <div class="logo-double-back">
-      <div class="logo-back-black"></div>
-      <div class="logo-back-white">
+    <div class="logo-container">
+      <div class="logo-black"></div>
+      <div class="logo-white">
         <img src="ACP.png" alt="ACP Logo">
       </div>
     </div>
