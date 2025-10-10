@@ -22,8 +22,14 @@
       justify-content: center;
     }
 
+    /* Title with white backing */
     h1 {
       margin-bottom: 40px;
+      display: inline-block;
+      background-color: white;
+      padding: 20px 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border-radius: 0;
     }
 
     .triple-backed-container {
@@ -31,6 +37,7 @@
       display: inline-block;
       max-width: 800px;
       text-align: center;
+      margin-bottom: 40px;
     }
 
     /* Backing layers */
@@ -44,20 +51,24 @@
 
     .black-bg {
       width: 100%;
-      height: 100%;
       max-width: 880px;
       padding: 40px 30px;
       background-color: black;
       z-index: 1;
+      top: -10px; /* slight upward offset for overlap */
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .red-bg {
       width: 100%;
-      height: 100%;
       max-width: 860px;
       padding: 40px 30px;
       background-color: red;
       z-index: 2;
+      top: -5px; /* slight upward offset */
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .white-bg {
@@ -74,7 +85,7 @@
       font-size: 1.2em;
       line-height: 1.6em;
       text-align: center;
-      margin: 0;
+      margin: 0 0 20px 0;
     }
 
     .back-button {
