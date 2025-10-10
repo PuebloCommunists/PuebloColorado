@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Organize</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: rgb(255, 255, 255);
+      background-image: url("SteelMillWrk.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: black;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      text-align: center;
+    }
+
+    .logo-left-wrapper {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      display: inline-block;
+    }
+
+    .logo-left-inner {
+      position: relative;
+      display: inline-block;
+      padding: 10px;
+      background-color: white;
+      z-index: 2;
+    }
+
+    .logo-left-inner::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: calc(100% + 16px);
+      height: calc(100% + 16px);
+      background-color: black;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .logo-left-inner img {
+      width: 150px;
+      height: auto;
+      display: block;
+    }
+
+    .discord-section {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .discord-text-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 5px;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .discord-text-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: calc(100% + 12px);
+      height: calc(100% + 12px);
+      background-color: black;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .discord-text {
+      font-size: 1em;
+      color: black;
+      background-color: white;
+      padding: 5px 10px;
+      border-radius: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .discord-button {
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .discord-button img {
+      width: 120px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .discord-button img:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .main-content img {
+      width: 700px;
+      height: auto;
+      margin-bottom: 20px;
+      border: 5px solid white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 0.8s;
+    }
+
+    .title-wrapper {
+      position: relative;
+      display: inline-block;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 1.5s;
+    }
+
+    .title-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: calc(100% + 24px);
+      height: calc(100% + 24px);
+      background-color: black;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    h1 {
+      color: black;
+      background-color: white;
+      display: inline-block;
+      padding: 20px 40px;
+      border-radius: 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      margin: 0;
+    }
+
+    .mission-button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 30px;
+      background-color: black;
+      color: white;
+      font-size: 1em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 1.5s;
+    }
+
+    .mission-button:hover {
+      background-color: #222;
+      transform: scale(1.05);
+    }
+
+    .footer-text {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75em;
+      color: gray;
+      opacity: 0.7;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-left-wrapper">
+    <div class="logo-left-inner">
+      <img src="ACP.png" alt="ACP Logo">
+    </div>
+  </div>
+
+  <div class="discord-section">
+    <div class="discord-text-wrapper">
+      <div class="discord-text">Get Organized:</div>
+    </div>
+    <a href="https://discord.gg/3wnU8xNbsR" target="_blank" rel="noopener noreferrer" class="discord-button">
+      <img src="disc.png" alt="Discord Invite">
+    </a>
+  </div>
+
+  <div class="main-content">
+    <img src="strongwoman2.png" alt="Strong Woman">
+    <div class="title-wrapper">
+      <h1>Let's Build a Stronger Community, Together!</h1>
+    </div>
+    <a href="mission.html" class="mission-button">Read Our Mission Statement</a>
+  </div>
+
+  <p class="footer-text">Hosted without corporate nonsense.</p>
+</body>
+</html>
