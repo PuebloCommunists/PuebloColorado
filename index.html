@@ -16,6 +16,17 @@
     color:#000;
   }
 
+  /* --- Top Right Button --- */
+  .top-right-btn {
+    position:absolute; top:25px; right:25px;
+    padding:10px 15px;
+    background:#fff;
+    border:none;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    cursor:pointer;
+    z-index:2000;
+  }
+
   /* --- Logo --- */
   .logo {
     position:absolute; top:40px; left:40px; display:inline-block; z-index:2000;
@@ -41,10 +52,12 @@
   .navigator-dots span { width:14px; height:14px; border-radius:50%; background:#fff; opacity:0.5; transition:0.3s; }
   .navigator-dots .active { opacity:1; transform:scale(1.5); box-shadow:0 0 8px #fff; }
 
-  .footer { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); font-size:0.75em; color:gray; opacity:0.7; }
 </style>
 </head>
 <body>
+
+<!-- Top Right Empty Button -->
+<button class="top-right-btn"></button>
 
 <!-- Logo -->
 <div class="logo">
@@ -64,8 +77,6 @@
   <div class="navigator-arrow right-arrow" onclick="location.href='mission.html'"></div>
   <div class="navigator-dots"><span class="active"></span><span></span><span></span></div>
 </div>
-
-<p class="footer">Hosted without corporate nonsense.</p>
 
 </body>
 </html>
