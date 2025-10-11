@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Mission</title>
   <style>
     body {
@@ -30,8 +31,11 @@
       padding: 20px 40px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       border-radius: 0;
+      z-index: 3;
+      position: relative;
     }
 
+    /* TRIPLE-BACKED container setup */
     .triple-backed-container {
       position: relative;
       display: inline-block;
@@ -40,40 +44,38 @@
       margin-bottom: 40px;
     }
 
-    /* Backing layers */
-    .backing-box {
+    /* Layer base */
+    .backing-layer {
       position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       border-radius: 0;
+      box-sizing: border-box;
     }
 
-    .black-bg {
-      width: 100%;
-      max-width: 880px;
-      padding: 40px 30px;
+    /* First (bottom) black layer */
+    .backing-layer.black {
       background-color: black;
+      transform: translate(14px, 14px);
       z-index: 1;
-      top: -10px;
     }
 
-    .red-bg {
-      width: 100%;
-      max-width: 860px;
-      padding: 40px 30px;
+    /* Second (middle) red layer */
+    .backing-layer.red {
       background-color: red;
+      transform: translate(7px, 7px);
       z-index: 2;
-      top: -5px;
     }
 
+    /* Top (white) layer */
     .white-bg {
       position: relative;
-      width: 100%;
-      max-width: 840px;
-      padding: 40px 30px;
       background-color: white;
+      padding: 40px 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       z-index: 3;
-      box-sizing: border-box;
     }
 
     .mission-text {
@@ -100,6 +102,16 @@
       background-color: #222;
       transform: scale(1.05);
     }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .white-bg {
+        padding: 25px 20px;
+      }
+      .mission-text {
+        font-size: 1em;
+      }
+    }
   </style>
 </head>
 <body>
@@ -107,8 +119,11 @@
   <h1>Our Mission Statement</h1>
 
   <div class="triple-backed-container">
-    <div class="backing-box black-bg"></div>
-    <div class="backing-box red-bg"></div>
+    <!-- Layered backing -->
+    <div class="backing-layer black"></div>
+    <div class="backing-layer red"></div>
+
+    <!-- Foreground (white layer with content) -->
     <div class="white-bg">
       <p class="mission-text">
         We strive to build a stronger community by connecting people, sharing knowledge, and supporting one another in meaningful ways. Our mission is to create a safe, welcoming space where everyone can grow together and make a positive impact.
