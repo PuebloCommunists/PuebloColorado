@@ -31,37 +31,71 @@
     left: 40px;
     z-index: 2000;
   }
-  .logo-container { position: relative; display: inline-block; z-index: 2000; }
+  .logo-container {
+    position: relative;
+    display: inline-block;
+    z-index: 2000;
+  }
   .logo-container::before {
-    content:""; position:absolute; top:-22px; left:-22px; right:-22px; bottom:-22px; background:black; z-index:1; border-radius:0;
+    content: "";
+    position: absolute;
+    top: -22px;
+    left: -22px;
+    right: -22px;
+    bottom: -22px;
+    background-color: black;
+    z-index: 1;
+    border-radius: 0;
   }
   .logo-container::after {
-    content:""; position:absolute; top:-11px; left:-11px; right:-11px; bottom:-11px; background:red; z-index:2; border-radius:0;
+    content: "";
+    position: absolute;
+    top: -11px;
+    left: -11px;
+    right: -11px;
+    bottom: -11px;
+    background-color: red;
+    z-index: 2;
+    border-radius: 0;
   }
-  .logo-white { position: relative; background:white; padding:12px; z-index:3; display:inline-block; box-shadow:0 4px 8px rgba(0,0,0,0.25); }
-  .logo-white img { width:150px; height:auto; display:block; z-index:4; }
+  .logo-white {
+    position: relative;
+    background-color: white;
+    padding: 12px;
+    z-index: 3;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+  }
+  .logo-white img {
+    width: 150px;
+    height: auto;
+    display: block;
+    z-index: 4;
+  }
 
-  /* --- Dropdown Menu (Hamburger) --- */
-  .menu-wrapper {
+  /* --- Drop-down menu button --- */
+  .dropdown {
     position: absolute;
     top: 25px;
     right: 25px;
-    z-index: 1000;
+    z-index: 3000;
   }
-  .menu-button {
-    width: 40px;
-    height: 30px;
-    background: white;
+  .dropbtn {
+    background-color: white;
+    border: none;
+    padding: 10px 15px;
     cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    padding: 5px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    justify-content: space-between;
+    width: 35px;
+    height: 25px;
   }
-  .menu-button div {
+  .dropbtn span {
+    display: block;
     height: 4px;
-    background: black;
+    background-color: black;
     border-radius: 2px;
   }
   .dropdown-content {
@@ -69,125 +103,209 @@
     position: absolute;
     top: 40px;
     right: 0;
-    background: white;
+    background-color: white;
     min-width: 150px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    z-index: 1;
     flex-direction: column;
   }
-  .dropdown-content button {
+  .dropdown-content a {
+    color: black;
     padding: 10px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
+    text-decoration: none;
+    display: block;
+    font-weight: bold;
   }
-  .dropdown-content button:hover { background: #eee; }
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+  .dropdown:hover .dropdown-content {
+    display: flex;
+  }
 
   /* --- Main Hub Content --- */
-  .main-content { display: flex; flex-direction: column; align-items:center; justify-content:center; text-align:center; }
-  .main-content img {
-    width: 700px; height:auto; margin-bottom:40px;
-    border:5px solid white; box-shadow:0 0 15px rgba(0,0,0,0.3);
-    opacity:0; animation:fadeIn 2s ease forwards; animation-delay:0.8s;
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
-  .title-wrapper { position:relative; display:inline-block; background:white; padding:20px 40px; box-shadow:0 4px 10px rgba(0,0,0,0.2); margin-bottom:40px; opacity:0; animation:fadeIn 2s ease forwards; animation-delay:1.2s; }
-  h1 { color:black; margin:0; }
+  .main-content img {
+    width: 700px;
+    height: auto;
+    margin-bottom: 40px;
+    border: 5px solid white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 0.8s;
+  }
+  .title-wrapper {
+    position: relative;
+    display: inline-block;
+    background-color: white;
+    padding: 20px 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeIn 2s ease forwards;
+    animation-delay: 1.2s;
+  }
+  h1 {
+    color: black;
+    margin: 0;
+  }
 
   /* --- Page Navigator --- */
-  .page-navigator { position:absolute; bottom:30px; display:flex; align-items:center; gap:50px; z-index:50; }
-  .navigator-arrow { width:0; height:0; border-style:solid; cursor:pointer; transition: transform 0.2s ease; }
-  .right-arrow { border-width: 15px 0 15px 20px; border-color: transparent transparent transparent white; }
-  .navigator-arrow:hover { transform: scale(1.3); }
-  .navigator-dots { display:flex; gap:10px; align-items:center; }
-  .navigator-dots span { width:12px; height:12px; border-radius:50%; background:white; opacity:0.6; display:inline-block; transition: opacity 0.2s ease, transform 0.2s ease; }
-  .navigator-dots .active { opacity:1; transform:scale(1.3); }
+  .page-navigator {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    z-index: 50;
+  }
+  .navigator-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .right-arrow {
+    border-width: 15px 0 15px 20px;
+    border-color: transparent transparent transparent white;
+  }
+  .navigator-arrow:hover {
+    transform: scale(1.3);
+  }
+  .navigator-dots {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .navigator-dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0.6;
+    display: inline-block;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .navigator-dots .active {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  .footer-text {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75em;
+    color: gray;
+    opacity: 0.7;
+  }
 
-  .footer-text { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); font-size:0.75em; color:gray; opacity:0.7; }
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInBackground {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
 
-  @keyframes fadeIn { 0%{opacity:0; transform:translateY(20px);} 100%{opacity:1; transform:translateY(0);} }
-  @keyframes fadeInBackground { 0%{opacity:0;} 100%{opacity:1;} }
+  @media (max-width: 600px) {
+    .logo-white img { width: 110px; }
+    .main-content img { width: 90vw; max-width: 700px; }
+    h1 { font-size: 1.2rem; padding: 14px 26px; }
+  }
 </style>
 </head>
 <body>
 
-  <!-- Triple-backed ACP Logo -->
-  <div class="logo-left-wrapper">
-    <div class="logo-container">
-      <div class="logo-white"><img src="ACP.png" alt="ACP Logo"></div>
+<!-- Triple-backed ACP Logo -->
+<div class="logo-left-wrapper">
+  <div class="logo-container">
+    <div class="logo-white">
+      <img src="ACP.png" alt="ACP Logo">
     </div>
   </div>
+</div>
 
-  <!-- Hamburger Dropdown Menu -->
-  <div class="menu-wrapper">
-    <div class="menu-button" id="menuBtn">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <div class="dropdown-content" id="dropdownMenu">
-      <!-- Dynamic content populated by JS -->
-    </div>
+<!-- Drop-down menu -->
+<div class="dropdown">
+  <button class="dropbtn">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="dropdown-content" id="dropdownContent">
+    <!-- Dynamic links inserted via JS -->
   </div>
+</div>
 
-  <!-- Main Hub Content -->
-  <div class="main-content">
-    <img src="strongwoman2.png" alt="Strong Woman">
-    <div class="title-wrapper"><h1>Let's Build a Stronger Community, Together!</h1></div>
+<!-- Main Hub Content -->
+<div class="main-content">
+  <img src="strongwoman2.png" alt="Strong Woman">
+  <div class="title-wrapper">
+    <h1>Let's Build a Stronger Community, Together!</h1>
   </div>
+</div>
 
-  <!-- Page Navigator -->
-  <div class="page-navigator">
-    <div class="navigator-arrow right-arrow" onclick="location.href='mission.html'"></div>
-    <div class="navigator-dots">
-      <span class="active"></span><span></span><span></span>
-    </div>
+<!-- Page Navigator -->
+<div class="page-navigator">
+  <div class="navigator-arrow right-arrow" onclick="location.href='mission.html'"></div>
+  <div class="navigator-dots">
+    <span class="active"></span>
+    <span></span>
+    <span></span>
   </div>
+</div>
 
-  <p class="footer-text">Hosted without corporate nonsense.</p>
+<p class="footer-text">Hosted without corporate nonsense.</p>
 
 <script>
-const LOGGED_IN_KEY = "loggedInUser";
+const dropdownContent = document.getElementById('dropdownContent');
+const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-function updateDropdown() {
-  const dropdown = document.getElementById("dropdownMenu");
-  dropdown.innerHTML = ""; // clear
-  const user = JSON.parse(localStorage.getItem(LOGGED_IN_KEY));
+// Clear previous content
+dropdownContent.innerHTML = '';
 
-  if(user) {
-    // Show logged-in info and logout
-    const info = document.createElement("div");
-    info.style.padding = "10px";
-    info.innerText = "Logged in as: " + user.username + (user.role === "admin" ? " (admin)" : "");
-    dropdown.appendChild(info);
+if (currentUser) {
+  // Logged in
+  const welcome = document.createElement('div');
+  welcome.innerText = "Logged in as: " + currentUser.username;
+  welcome.style.padding = "10px";
+  welcome.style.fontWeight = "bold";
+  dropdownContent.appendChild(welcome);
 
-    const logoutBtn = document.createElement("button");
-    logoutBtn.innerText = "Logout";
-    logoutBtn.onclick = function() {
-      localStorage.removeItem(LOGGED_IN_KEY);
-      location.reload();
-    };
-    dropdown.appendChild(logoutBtn);
+  // Members page link
+  const membersLink = document.createElement('a');
+  membersLink.href = 'members.html';
+  membersLink.innerText = "Members";
+  dropdownContent.appendChild(membersLink);
 
-  } else {
-    // Show login option
-    const loginBtn = document.createElement("button");
-    loginBtn.innerText = "Login";
-    loginBtn.onclick = function() {
-      window.location.href = "login.html";
-    };
-    dropdown.appendChild(loginBtn);
-  }
+  // Logout button
+  const logoutLink = document.createElement('a');
+  logoutLink.href = "#";
+  logoutLink.innerText = "Log Out";
+  logoutLink.addEventListener('click', () => {
+    localStorage.removeItem('currentUser');
+    location.reload();
+  });
+  dropdownContent.appendChild(logoutLink);
+
+} else {
+  // Not logged in
+  const loginLink = document.createElement('a');
+  loginLink.href = 'login.html';
+  loginLink.innerText = "Login / Sign Up";
+  dropdownContent.appendChild(loginLink);
 }
-
-// Toggle dropdown visibility
-document.getElementById("menuBtn").addEventListener("click", function(){
-  const dropdown = document.getElementById("dropdownMenu");
-  dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
-});
-
-updateDropdown();
 </script>
+
 </body>
 </html>
