@@ -4,27 +4,33 @@
 <meta charset="UTF-8">
 <title>Organize - Hub</title>
 <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-image: url("pueblo.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: black;
+  /* --- Reset & Base Styles --- */
+  * {
+    box-sizing: border-box;
     margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Arial', sans-serif;
+    background: url("pueblo.jpg") center/cover no-repeat fixed;
+    color: #fff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
     text-align: center;
-    opacity: 0;
-    animation: fadeInBackground 2s ease forwards;
+    overflow-x: hidden;
+    background-blend-mode: overlay;
   }
 
-  /* --- Triple-backed ACP Logo --- */
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* --- Logo --- */
   .logo-left-wrapper {
     position: absolute;
     top: 40px;
@@ -35,38 +41,31 @@
   .logo-container {
     position: relative;
     display: inline-block;
-    z-index: 2000;
   }
 
   .logo-container::before {
     content: "";
     position: absolute;
-    top: -22px;
-    left: -22px;
-    right: -22px;
-    bottom: -22px;
-    background-color: black;
+    top: -22px; left: -22px; right: -22px; bottom: -22px;
+    background: #000;
     z-index: 1;
   }
 
   .logo-container::after {
     content: "";
     position: absolute;
-    top: -11px;
-    left: -11px;
-    right: -11px;
-    bottom: -11px;
-    background-color: red;
+    top: -11px; left: -11px; right: -11px; bottom: -11px;
+    background: red;
     z-index: 2;
   }
 
   .logo-white {
     position: relative;
-    background-color: white;
+    background: #fff;
     padding: 12px;
     z-index: 3;
-    display: inline-block;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    border-radius: 8px;
   }
 
   .logo-white img {
@@ -76,96 +75,99 @@
     z-index: 4;
   }
 
-  /* --- Dropdown Menu --- */
+  /* --- Hamburger Dropdown --- */
   .dropdown-wrapper {
     position: absolute;
     top: 25px;
     right: 25px;
-    z-index: 100;
+    z-index: 3000;
   }
 
   .dropdown-button {
-    width: 35px;
-    height: 25px;
-    background-color: white;
+    width: 40px;
+    height: 30px;
+    background: linear-gradient(135deg, #fff, #e0e0e0);
     border: none;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 0 12px rgba(255,255,255,0.5);
+    transition: transform 0.2s;
+  }
+
+  .dropdown-button:hover {
+    transform: scale(1.05);
   }
 
   .dropdown-button div {
     height: 4px;
-    background-color: black;
     border-radius: 2px;
+    background-color: #333;
   }
 
   .dropdown-content {
     display: none;
     position: absolute;
-    top: 40px;
+    top: 45px;
     right: 0;
-    background-color: white;
-    min-width: 180px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    z-index: 10;
+    background: #111;
+    min-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     flex-direction: column;
+    z-index: 10;
   }
 
   .dropdown-content a, .dropdown-content button {
-    padding: 10px;
-    text-decoration: none;
-    color: black;
+    padding: 12px 20px;
+    color: #fff;
     background: none;
     border: none;
     text-align: left;
     cursor: pointer;
-    font-size: 0.95rem;
-    transition: background 0.2s;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
   }
 
   .dropdown-content a:hover, .dropdown-content button:hover {
-    background-color: #f0f0f0;
+    background: #222;
+    color: #ff4c4c;
   }
 
-  /* --- Main Hub Content --- */
+  /* --- Main Content --- */
   .main-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
+    gap: 40px;
   }
 
   .main-content img {
     width: 700px;
-    height: auto;
-    margin-bottom: 40px;
-    border: 5px solid white;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    opacity: 0;
-    animation: fadeIn 2s ease forwards;
-    animation-delay: 0.8s;
+    max-width: 90vw;
+    border-radius: 12px;
+    border: 4px solid #fff;
+    box-shadow: 0 0 25px rgba(255,255,255,0.3);
+    animation: fadeInUp 1.5s ease forwards;
   }
 
   .title-wrapper {
-    position: relative;
-    display: inline-block;
-    background-color: white;
-    padding: 20px 40px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: fadeIn 2s ease forwards;
-    animation-delay: 1.2s;
+    background: rgba(255,255,255,0.95);
+    padding: 25px 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    animation: fadeInUp 1.8s ease forwards;
   }
 
-  h1 {
-    color: black;
-    margin: 0;
+  .title-wrapper h1 {
+    color: #111;
+    font-size: 2rem;
+    font-weight: bold;
   }
 
   /* --- Page Navigator --- */
@@ -187,8 +189,8 @@
   }
 
   .right-arrow {
-    border-width: 15px 0 15px 20px;
-    border-color: transparent transparent transparent white;
+    border-width: 18px 0 18px 28px;
+    border-color: transparent transparent transparent #fff;
   }
 
   .navigator-arrow:hover {
@@ -197,23 +199,22 @@
 
   .navigator-dots {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
   }
 
   .navigator-dots span {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background-color: white;
+    background-color: #fff;
     opacity: 0.6;
-    display: inline-block;
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
 
   .navigator-dots .active {
     opacity: 1;
-    transform: scale(1.3);
+    transform: scale(1.4);
   }
 
   .footer-text {
@@ -222,24 +223,18 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: 0.75em;
-    color: gray;
-    opacity: 0.7;
+    color: #ccc;
   }
 
-  @keyframes fadeIn {
+  /* --- Animations --- */
+  @keyframes fadeInUp {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  @keyframes fadeInBackground {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-
   @media (max-width: 600px) {
-    .logo-white img { width: 110px; }
-    .main-content img { width: 90vw; max-width: 700px; }
-    h1 { font-size: 1.2rem; padding: 14px 26px; }
+    .main-content img { width: 90vw; }
+    .title-wrapper h1 { font-size: 1.4rem; padding: 18px 24px; }
   }
 </style>
 </head>
@@ -263,9 +258,7 @@
   </button>
   <div id="dropdownContent" class="dropdown-content">
     <a href="members.html">Members Page</a>
-    <div id="authSection">
-      <!-- Login / Sign Up OR Logged in info dynamically inserted here -->
-    </div>
+    <div id="authSection"></div>
   </div>
 </div>
 
@@ -277,7 +270,7 @@
   </div>
 </div>
 
-<!-- Page Navigator: Index page only has right arrow -->
+<!-- Page Navigator -->
 <div class="page-navigator">
   <div class="navigator-arrow right-arrow" onclick="location.href='mission.html'"></div>
   <div class="navigator-dots">
@@ -294,20 +287,21 @@
   function toggleDropdown() {
     const content = document.getElementById('dropdownContent');
     content.style.display = (content.style.display === 'flex') ? 'none' : 'flex';
+    content.style.flexDirection = 'column';
   }
 
-  // Dynamically update login/logout display
+  // Update Auth Section
   function updateAuthSection() {
     const authDiv = document.getElementById('authSection');
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     authDiv.innerHTML = '';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    if (currentUser && currentUser.username) {
-      // Logged in: show username and logout button
-      const info = document.createElement('div');
-      info.style.padding = '10px';
-      info.textContent = 'Logged in as: ' + currentUser.username;
-      authDiv.appendChild(info);
+    if(currentUser && currentUser.username) {
+      // Logged in view
+      const userInfo = document.createElement('div');
+      userInfo.textContent = `Logged in as: ${currentUser.username}`;
+      userInfo.style.padding = '10px';
+      authDiv.appendChild(userInfo);
 
       const logoutBtn = document.createElement('button');
       logoutBtn.textContent = 'Sign Out';
@@ -317,7 +311,7 @@
       };
       authDiv.appendChild(logoutBtn);
     } else {
-      // Not logged in: show login link
+      // Not logged in
       const loginLink = document.createElement('a');
       loginLink.href = 'login.html';
       loginLink.textContent = 'Log In / Sign Up';
