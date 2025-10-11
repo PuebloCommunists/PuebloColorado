@@ -206,7 +206,7 @@
     <span></span>
   </button>
   <div class="dropdown-content" id="dropdownContent">
-    <!-- Populated by JS -->
+    <!-- JS populates content -->
   </div>
 </div>
 
@@ -228,15 +228,12 @@ function updateDropdown() {
 
   dropdownContent.innerHTML = '';
   if(currentUser) {
+    // Show logged in user info
     const userDiv = document.createElement('div');
     userDiv.innerText = "Logged in as: " + currentUser.username;
     dropdownContent.appendChild(userDiv);
 
-    const membersLink = document.createElement('a');
-    membersLink.href = 'members.html';
-    membersLink.innerText = "Members";
-    dropdownContent.appendChild(membersLink);
-
+    // Logout button
     const logoutLink = document.createElement('a');
     logoutLink.href = "#";
     logoutLink.innerText = "Log Out";
@@ -245,7 +242,15 @@ function updateDropdown() {
       location.reload();
     });
     dropdownContent.appendChild(logoutLink);
+
+    // Members page
+    const membersLink = document.createElement('a');
+    membersLink.href = 'members.html';
+    membersLink.innerText = "Members";
+    dropdownContent.appendChild(membersLink);
+
   } else {
+    // Not logged in
     const loginLink = document.createElement('a');
     loginLink.href = 'login.html';
     loginLink.innerText = "Login / Sign Up";
@@ -260,12 +265,14 @@ function updateDropdown() {
 
 updateDropdown();
 
+// Toggle dropdown
 document.getElementById('dropBtn').addEventListener('click', e => {
   e.stopPropagation();
   dropdownContent.style.display = dropdownContent.style.display === 'flex' ? 'none' : 'flex';
   dropdownContent.style.flexDirection = 'column';
 });
 
+// Close dropdown if click outside
 window.addEventListener('click', ()=>{
   dropdownContent.style.display = 'none';
 });
