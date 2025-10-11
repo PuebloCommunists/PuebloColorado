@@ -23,19 +23,48 @@
       justify-content: center;
     }
 
-    /* Title */
-    h1 {
-      margin-bottom: 40px;
+    /* ===== DOUBLE-BACKED HEADING ===== */
+    .title-container {
+      position: relative;
       display: inline-block;
+      margin-bottom: 60px;
+    }
+
+    .title-layer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 0;
+      box-sizing: border-box;
+    }
+
+    .title-layer.black {
+      background-color: black;
+      width: calc(100% + 20px);
+      height: calc(100% + 20px);
+      z-index: 1;
+    }
+
+    .title-layer.red {
+      background-color: red;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      z-index: 2;
+    }
+
+    h1 {
+      position: relative;
       background-color: white;
       padding: 20px 40px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       border-radius: 0;
-      position: relative;
+      display: inline-block;
       z-index: 3;
+      margin: 0;
     }
 
-    /* Container for triple backing */
+    /* ===== TRIPLE-BACKED MISSION BOX ===== */
     .triple-backed-container {
       position: relative;
       display: inline-block;
@@ -43,7 +72,6 @@
       margin-bottom: 40px;
     }
 
-    /* Backing layers - true stacked squares */
     .backing-layer {
       position: absolute;
       top: 50%;
@@ -53,7 +81,6 @@
       box-sizing: border-box;
     }
 
-    /* Outer black layer - largest */
     .backing-layer.black {
       background-color: black;
       width: calc(100% + 40px);
@@ -61,7 +88,6 @@
       z-index: 1;
     }
 
-    /* Middle red layer - medium */
     .backing-layer.red {
       background-color: red;
       width: calc(100% + 20px);
@@ -69,7 +95,6 @@
       z-index: 2;
     }
 
-    /* Top white layer (foreground box) */
     .white-bg {
       position: relative;
       background-color: white;
@@ -107,6 +132,10 @@
 
     /* Mobile tweaks */
     @media (max-width: 600px) {
+      h1 {
+        padding: 15px 25px;
+        font-size: 1.4em;
+      }
       .white-bg {
         padding: 25px 20px;
       }
@@ -118,14 +147,18 @@
 </head>
 <body>
 
-  <h1>Our Mission Statement</h1>
+  <!-- === DOUBLE-BACKED TITLE === -->
+  <div class="title-container">
+    <div class="title-layer black"></div>
+    <div class="title-layer red"></div>
+    <h1>Our Mission Statement</h1>
+  </div>
 
+  <!-- === TRIPLE-BACKED CONTENT BOX === -->
   <div class="triple-backed-container">
-    <!-- True layered backing -->
     <div class="backing-layer black"></div>
     <div class="backing-layer red"></div>
 
-    <!-- Foreground content -->
     <div class="white-bg">
       <p class="mission-text">
         We strive to build a stronger community by connecting people, sharing knowledge, and supporting one another in meaningful ways. Our mission is to create a safe, welcoming space where everyone can grow together and make a positive impact.
