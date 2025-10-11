@@ -45,7 +45,6 @@
     bottom: -22px;
     background-color: black;
     z-index: 1;
-    border-radius: 0;
   }
   .logo-container::after {
     content: "";
@@ -56,7 +55,6 @@
     bottom: -11px;
     background-color: red;
     z-index: 2;
-    border-radius: 0;
   }
   .logo-white {
     position: relative;
@@ -83,7 +81,7 @@
   .dropbtn {
     background-color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 10px;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     display: flex;
@@ -101,7 +99,7 @@
   .dropdown-content {
     display: none;
     position: absolute;
-    top: 40px;
+    top: 35px;
     right: 0;
     background-color: white;
     min-width: 150px;
@@ -109,18 +107,16 @@
     z-index: 1;
     flex-direction: column;
   }
-  .dropdown-content a {
+  .dropdown-content a, .dropdown-content div {
     color: black;
     padding: 10px;
     text-decoration: none;
     display: block;
     font-weight: bold;
+    cursor: pointer;
   }
   .dropdown-content a:hover {
     background-color: #ddd;
-  }
-  .dropdown:hover .dropdown-content {
-    display: flex;
   }
 
   /* --- Main Hub Content --- */
@@ -237,13 +233,13 @@
 
 <!-- Drop-down menu -->
 <div class="dropdown">
-  <button class="dropbtn">
+  <button class="dropbtn" id="dropBtn">
     <span></span>
     <span></span>
     <span></span>
   </button>
   <div class="dropdown-content" id="dropdownContent">
-    <!-- Dynamic links inserted via JS -->
+    <!-- JS will populate -->
   </div>
 </div>
 
@@ -271,24 +267,20 @@
 const dropdownContent = document.getElementById('dropdownContent');
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-// Clear previous content
+// Clear dropdown
 dropdownContent.innerHTML = '';
 
-if (currentUser) {
+if(currentUser){
   // Logged in
   const welcome = document.createElement('div');
   welcome.innerText = "Logged in as: " + currentUser.username;
-  welcome.style.padding = "10px";
-  welcome.style.fontWeight = "bold";
   dropdownContent.appendChild(welcome);
 
-  // Members page link
   const membersLink = document.createElement('a');
   membersLink.href = 'members.html';
   membersLink.innerText = "Members";
   dropdownContent.appendChild(membersLink);
 
-  // Logout button
   const logoutLink = document.createElement('a');
   logoutLink.href = "#";
   logoutLink.innerText = "Log Out";
@@ -297,14 +289,19 @@ if (currentUser) {
     location.reload();
   });
   dropdownContent.appendChild(logoutLink);
-
-} else {
+}else{
   // Not logged in
   const loginLink = document.createElement('a');
   loginLink.href = 'login.html';
   loginLink.innerText = "Login / Sign Up";
   dropdownContent.appendChild(loginLink);
 }
+
+// Make dropdown toggle on click
+const dropBtn = document.getElementById('dropBtn');
+dropBtn.addEventListener('click', () => {
+  dropdownContent.style.display = dropdownContent.style.display === 'flex' ? 'none' : 'flex';
+});
 </script>
 
 </body>
