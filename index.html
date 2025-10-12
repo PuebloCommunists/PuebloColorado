@@ -26,11 +26,56 @@
   .logo-inner::after { content:""; position:absolute; top:-11px; left:-11px; right:-11px; bottom:-11px; background:red; z-index:-1; }
 
   /* Top-right button */
-  .top-btn { position:absolute; top:25px; right:25px; width:65px; height:65px; background:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 10px rgba(0,0,0,0.25); transition:0.3s; }
+  .top-btn {
+    position:absolute; top:25px; right:25px;
+    width:65px; height:65px;
+    background:#fff; border:none;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.25); transition:0.3s;
+    z-index:1000;
+  }
   .top-btn img { width:100%; height:100%; object-fit:cover; pointer-events:none; }
   .top-btn:hover { box-shadow:0 0 20px #0ff,0 0 30px #0ff; transform:scale(1.1); }
 
-  /* Main content centered */
+  /* Popup overlay */
+  .popup-overlay {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;
+    justify-content:center;
+    z-index:2000;
+  }
+  .popup {
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.3);
+    text-align:left;
+    min-width:250px;
+    animation: fadeIn 0.4s ease;
+  }
+  .popup button {
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    background:#eee;
+    cursor:pointer;
+  }
+  .popup button:hover { background:#ddd; }
+  .close-popup {
+    position:absolute;
+    top:10px;
+    right:15px;
+    background:none;
+    border:none;
+    font-size:20px;
+    cursor:pointer;
+  }
+
+  /* Main content */
   .main-content { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:40px; }
   .main-content img { width:700px; max-width:90vw; border:5px solid white; box-shadow:0 0 15px rgba(0,0,0,0.3); animation:fadeIn 2s 0.8s forwards; opacity:0; }
   h1 { background:white; display:inline-block; padding:20px 40px; box-shadow:0 4px 10px rgba(0,0,0,0.2); margin:0; animation:fadeIn 2s 1.2s forwards; opacity:0; }
@@ -54,19 +99,67 @@
   <div class="logo"><div class="logo-inner"><img src="ACP.png" alt="ACP Logo"></div></div>
 
   <!-- Top-right button -->
-  <button class="top-btn" onclick="alert('Button clicked!')"><img src="accimg.png" alt="Account"></button>
+  <button class="top-btn" id="menuBtn"><img src="accimg.png" alt="Account"></button>
 
-  <!-- Main content centered -->
+  <!-- Popup menu -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <button class="close-popup" id="closePopup">&times;</button>
+      <div id="popupContent"></div>
+    </div>
+  </div>
+
+  <!-- Main content -->
   <div class="main-content">
     <img src="strongwoman2.png" alt="Strong Woman">
     <h1>Let's Build a Stronger Community, Together!</h1>
   </div>
 
-  <!-- Page navigator -->
+  <!-- Navigator -->
   <div class="navigator">
     <div class="arrow right" onclick="location.href='mission.html'"></div>
     <div class="dots"><span class="active"></span><span></span><span></span></div>
   </div>
+
+<script>
+const LOGGED_IN_KEY = "loggedInUser";
+
+function updatePopup() {
+  const popupContent = document.getElementById("popupContent");
+  popupContent.innerHTML = "";
+  const user = JSON.parse(localStorage.getItem(LOGGED_IN_KEY));
+
+  if (user) {
+    const info = document.createElement("div");
+    info.textContent = "Logged in as: " + user.username + (user.role==="admin" ? " (admin)" : "");
+    popupContent.appendChild(info);
+
+    const logoutBtn = document.createElement("button");
+    logoutBtn.textContent = "Logout";
+    logoutBtn.onclick = () => {
+      localStorage.removeItem(LOGGED_IN_KEY);
+      location.reload();
+    };
+    popupContent.appendChild(logoutBtn);
+  } else {
+    const loginBtn = document.createElement("button");
+    loginBtn.textContent = "Login";
+    loginBtn.onclick = () => { window.location.href = "login.html"; };
+    popupContent.appendChild(loginBtn);
+  }
+}
+
+document.getElementById("menuBtn").addEventListener("click", () => {
+  updatePopup();
+  document.getElementById("popupOverlay").style.display = "flex";
+});
+document.getElementById("closePopup").addEventListener("click", () => {
+  document.getElementById("popupOverlay").style.display = "none";
+});
+document.getElementById("popupOverlay").addEventListener("click", (e) => {
+  if (e.target.id === "popupOverlay") e.target.style.display = "none";
+});
+</script>
 
 </body>
 </html>
