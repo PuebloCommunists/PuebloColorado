@@ -2,18 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Mission | ACP</title>
+<title>Our Mission - ACP</title>
 <style>
   :root {
-    --primary: #00f7ff;
-    --primary-dark: #00a8cc;
-    --secondary: #ff2a6d;
-    --dark: #0c0e27;
-    --darker: #05071e;
-    --light: #ffffff;
-    --glass: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.12);
+    --red: #e63946;
+    --dark-red: #c1121f;
+    --yellow: #ffd166;
+    --dark-blue: #1d3557;
+    --light: #f1faee;
+    --gray: #8d99ae;
   }
   
   * {
@@ -23,78 +20,39 @@
   }
   
   body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url("SteelMillWrk.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: var(--light);
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
-    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: relative;
+    line-height: 1.6;
   }
-  
-  /* Animated Background Elements */
-  .bg-elements {
+
+  /* Industrial pattern overlay */
+  .industrial-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
-    overflow: hidden;
-  }
-  
-  .grid-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background-image: 
-      linear-gradient(rgba(0, 247, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 247, 255, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(29, 53, 87, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29, 53, 87, 0.1) 1px, transparent 1px);
     background-size: 50px 50px;
-    animation: gridMove 20s linear infinite;
+    z-index: -1;
   }
-  
-  .floating-shapes {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .shape {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.3;
-  }
-  
-  .shape-1 {
-    width: 300px;
-    height: 300px;
-    background: var(--primary);
-    top: 10%;
-    left: 5%;
-    animation: float 15s ease-in-out infinite;
-  }
-  
-  .shape-2 {
-    width: 400px;
-    height: 400px;
-    background: var(--secondary);
-    bottom: 10%;
-    right: 5%;
-    animation: float 18s ease-in-out infinite reverse;
-  }
-  
-  .shape-3 {
-    width: 200px;
-    height: 200px;
-    background: var(--primary-dark);
-    top: 50%;
-    left: 80%;
-    animation: float 12s ease-in-out infinite;
-  }
-  
+
   /* Top-right button */
   .top-btn {
     position: fixed;
@@ -102,18 +60,16 @@
     right: 25px;
     width: 65px;
     height: 65px;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
+    background: var(--red);
+    border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
     z-index: 1000;
     border-radius: 50%;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
   }
   
   .top-btn img {
@@ -125,36 +81,35 @@
   }
   
   .top-btn:hover {
-    box-shadow: 0 0 20px var(--primary), 0 0 30px var(--primary);
+    box-shadow: 0 0 20px var(--red), 0 0 30px var(--red);
     transform: scale(1.1);
-    border: 1px solid var(--primary);
+    background: var(--dark-red);
   }
-  
+
   /* Popup overlay */
   .popup-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(5, 7, 30, 0.85);
+    background: rgba(0, 0, 0, 0.8);
     align-items: center;
     justify-content: center;
     z-index: 2000;
-    backdrop-filter: blur(5px);
   }
   
   .popup {
     position: relative;
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: rgba(29, 53, 87, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     padding: 60px 60px 50px;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 247, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(230, 57, 70, 0.3);
     min-width: 400px;
     max-width: 675px;
     text-align: center;
     animation: fadeIn 0.4s ease;
-    border: 1px solid var(--glass-border);
+    border: 2px solid var(--red);
     color: var(--light);
   }
   
@@ -179,7 +134,7 @@
   }
   
   .close-popup:hover {
-    color: var(--primary);
+    color: var(--red);
     transform: scale(1.2);
     background: rgba(255, 255, 255, 0.1);
   }
@@ -189,286 +144,259 @@
     padding: 12px;
     margin-top: 15px;
     border: none;
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--red);
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 4px;
     transition: 0.2s;
     color: var(--light);
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
   .popup button:hover {
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 0 10px var(--primary);
+    background: var(--dark-red);
+    box-shadow: 0 0 10px var(--red);
   }
-  
-  /* Main Content */
+
+  /* Main Container */
   .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 40px 20px;
     position: relative;
     z-index: 10;
-  }
-  
-  .header {
     text-align: center;
-    margin-bottom: 80px;
+  }
+
+  /* Header Section */
+  .header {
+    margin-bottom: 60px;
     position: relative;
   }
-  
-  .mission-title {
-    font-size: 4.5rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+
+  .title-container {
     position: relative;
     display: inline-block;
+    margin-bottom: 20px;
     opacity: 0;
-    animation: fadeInUp 1s ease forwards;
+    animation: fadeIn 1s ease forwards;
   }
-  
-  .mission-title::after {
-    content: '';
+
+  .title-backdrop {
     position: absolute;
-    bottom: -10px;
-    left: 10%;
-    width: 80%;
-    height: 4px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    border-radius: 2px;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    background: var(--dark-blue);
+    z-index: 1;
+    transform: rotate(-1deg);
   }
-  
+
+  .title-main {
+    position: relative;
+    background: var(--red);
+    padding: 25px 50px;
+    z-index: 3;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: var(--light);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 2px solid var(--yellow);
+  }
+
   .subtitle {
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.3rem;
+    color: var(--yellow);
     max-width: 600px;
     margin: 0 auto;
     opacity: 0;
-    animation: fadeInUp 1s ease 0.3s forwards;
+    animation: fadeIn 1s ease 0.3s forwards;
+    font-weight: 300;
+    letter-spacing: 1px;
   }
-  
+
   /* Mission Content */
   .mission-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
-    margin-bottom: 80px;
+    margin-bottom: 60px;
     opacity: 0;
-    animation: fadeInUp 1s ease 0.6s forwards;
+    animation: fadeIn 1s ease 0.6s forwards;
   }
-  
+
   .mission-text {
-    background: var(--glass);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
+    background: rgba(29, 53, 87, 0.9);
+    border-left: 5px solid var(--red);
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    position: relative;
   }
-  
-  .mission-text:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 247, 255, 0.1);
+
+  .mission-text::before {
+    content: "❝";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 3rem;
+    color: var(--red);
+    opacity: 0.5;
   }
-  
+
   .mission-text p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.8;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
   }
-  
+
   .mission-visual {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 20px;
   }
-  
-  .hologram {
-    width: 100%;
-    height: 300px;
-    background: linear-gradient(135deg, rgba(0, 247, 255, 0.1) 0%, rgba(255, 42, 109, 0.1) 100%);
-    border-radius: 20px;
+
+  .symbol-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .symbol {
+    width: 80px;
+    height: 80px;
+    background: var(--red);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 0 30px rgba(0, 247, 255, 0.2);
+    border-radius: 50%;
+    font-size: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--yellow);
   }
-  
-  .hologram::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: rotate(45deg);
-    animation: shine 3s infinite;
-  }
-  
-  .hologram-content {
+
+  .callout-box {
+    background: rgba(255, 209, 102, 0.9);
+    color: var(--dark-blue);
+    padding: 20px;
+    border-radius: 5px;
     text-align: center;
-    z-index: 2;
-    position: relative;
-  }
-  
-  .hologram-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    color: var(--primary);
-    text-shadow: 0 0 15px var(--primary);
-  }
-  
-  .hologram-text {
-    font-size: 1.5rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--red);
   }
-  
+
   /* Values Section */
   .values-section {
-    margin-bottom: 80px;
+    margin-bottom: 60px;
     opacity: 0;
-    animation: fadeInUp 1s ease 0.9s forwards;
+    animation: fadeIn 1s ease 0.9s forwards;
   }
-  
+
   .section-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     text-align: center;
-    margin-bottom: 50px;
-    color: var(--light);
+    margin-bottom: 40px;
+    color: var(--yellow);
     position: relative;
     display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
+    padding-bottom: 10px;
   }
-  
+
   .section-title::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: 0;
     left: 10%;
     width: 80%;
     height: 3px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    border-radius: 2px;
+    background: var(--red);
   }
-  
+
   .values-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
   }
-  
+
   .value-card {
-    background: var(--glass);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 15px;
-    padding: 30px;
+    background: rgba(29, 53, 87, 0.9);
+    padding: 30px 20px;
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
-    overflow: hidden;
+    border-top: 5px solid var(--red);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   }
-  
-  .value-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-  }
-  
+
   .value-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 247, 255, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   }
-  
+
   .value-icon {
     font-size: 2.5rem;
     margin-bottom: 20px;
-    color: var(--primary);
+    color: var(--yellow);
   }
-  
+
   .value-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-bottom: 15px;
     color: var(--light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
-  
+
   .value-description {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
   }
-  
-  /* Call to Action */
-  .cta-section {
+
+  /* Action Section */
+  .action-section {
     text-align: center;
-    margin-bottom: 80px;
+    margin-bottom: 60px;
     opacity: 0;
-    animation: fadeInUp 1s ease 1.2s forwards;
+    animation: fadeIn 1s ease 1.2s forwards;
   }
-  
-  .cta-title {
-    font-size: 2.5rem;
+
+  .action-title {
+    font-size: 2rem;
     margin-bottom: 30px;
-    color: var(--light);
+    color: var(--yellow);
   }
-  
-  .cta-button {
+
+  .action-button {
     display: inline-block;
     padding: 15px 40px;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    color: var(--darker);
+    background: var(--red);
+    color: var(--light);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-radius: 50px;
+    border-radius: 4px;
     text-decoration: none;
     transition: all 0.3s;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
+    border: 2px solid var(--yellow);
   }
-  
-  .cta-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: 0.5s;
-  }
-  
-  .cta-button:hover {
+
+  .action-button:hover {
+    background: var(--dark-red);
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   }
-  
-  .cta-button:hover::before {
-    left: 100%;
-  }
-  
+
   /* Page Navigator */
   .page-navigator {
     display: flex;
@@ -477,91 +405,36 @@
     gap: 50px;
     margin-top: 40px;
     opacity: 0;
-    animation: fadeInUp 1s ease 1.5s forwards;
+    animation: fadeIn 1s ease 1.5s forwards;
   }
-  
+
   .navigator-arrow {
     width: 60px;
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--glass);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    background: var(--red);
+    border: 2px solid var(--yellow);
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
-  
-  .navigator-arrow::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: -1;
-  }
-  
+
   .navigator-arrow:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 20px var(--primary);
+    background: var(--dark-red);
+    box-shadow: 0 0 20px var(--red);
   }
-  
-  .navigator-arrow:hover::before {
-    opacity: 1;
-  }
-  
+
   .arrow-icon {
     font-size: 1.5rem;
     color: var(--light);
+    font-weight: bold;
   }
-  
+
   /* Animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-20px) rotate(5deg);
-    }
-  }
-  
-  @keyframes gridMove {
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-      transform: translate(50px, 50px);
-    }
-  }
-  
-  @keyframes shine {
-    0% {
-      transform: rotate(45deg) translateX(-100%);
-    }
-    100% {
-      transform: rotate(45deg) translateX(100%);
-    }
-  }
-  
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -572,7 +445,7 @@
       transform: translateY(0);
     }
   }
-  
+
   /* Responsive Design */
   @media (max-width: 992px) {
     .mission-content {
@@ -583,8 +456,8 @@
       grid-template-columns: repeat(2, 1fr);
     }
     
-    .mission-title {
-      font-size: 3.5rem;
+    .title-main {
+      font-size: 2rem;
     }
   }
   
@@ -593,8 +466,9 @@
       grid-template-columns: 1fr;
     }
     
-    .mission-title {
-      font-size: 2.8rem;
+    .title-main {
+      font-size: 1.8rem;
+      padding: 20px 30px;
     }
     
     .container {
@@ -604,19 +478,17 @@
     .mission-text {
       padding: 25px;
     }
+    
+    .symbol-container {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 </style>
 </head>
 <body>
-  <!-- Animated Background -->
-  <div class="bg-elements">
-    <div class="grid-lines"></div>
-    <div class="floating-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-    </div>
-  </div>
+  <!-- Industrial Overlay -->
+  <div class="industrial-overlay"></div>
 
   <!-- Top-right account button -->
   <button class="top-btn" id="menuBtn">
@@ -634,53 +506,58 @@
   <!-- Main Content -->
   <div class="container">
     <div class="header">
-      <h1 class="mission-title">Our Mission</h1>
-      <p class="subtitle">Building a stronger community through innovation, collaboration, and dedication</p>
+      <div class="title-container">
+        <div class="title-backdrop"></div>
+        <h1 class="title-main">Our Mission Statement</h1>
+      </div>
+      <p class="subtitle">Solidarity • Community • Progress</p>
     </div>
 
     <div class="mission-content">
       <div class="mission-text">
         <p>Our mission is to build towards a proud, united Pueblo through food drives, community outreach, community service, volunteer work, and care for the elderly.</p>
-        <p>We strive to strengthen our community through transparency, collaboration, and organization. By leveraging technology and modern approaches, we're creating sustainable solutions that empower every member of our community.</p>
-        <p>Together, we're building a future where technology serves humanity, and where every individual has the opportunity to thrive in a connected, supportive environment.</p>
+        <p>We strive to strengthen our community through transparency, collaboration, and organization. By putting people before profit, we're creating a society where everyone's needs are met and everyone has the opportunity to thrive.</p>
+        <p>Together, we're building a future based on mutual aid, solidarity, and the collective power of working people united in common purpose.</p>
       </div>
       
       <div class="mission-visual">
-        <div class="hologram">
-          <div class="hologram-content">
-            <div class="hologram-icon">⚡</div>
-            <div class="hologram-text">Community Innovation</div>
-          </div>
+        <div class="symbol-container">
+          <div class="symbol">⚒</div>
+          <div class="symbol">🤝</div>
+          <div class="symbol">🌹</div>
+        </div>
+        <div class="callout-box">
+          "From each according to their ability, to each according to their needs"
         </div>
       </div>
     </div>
 
     <div class="values-section">
-      <h2 class="section-title">Our Core Values</h2>
+      <h2 class="section-title">Our Principles</h2>
       <div class="values-grid">
         <div class="value-card">
-          <div class="value-icon">🤝</div>
-          <h3 class="value-title">Collaboration</h3>
-          <p class="value-description">Working together to achieve common goals and create lasting impact in our community.</p>
+          <div class="value-icon">⚖️</div>
+          <h3 class="value-title">Equality</h3>
+          <p class="value-description">We believe in a society where all people have equal access to resources, opportunities, and dignity regardless of background.</p>
         </div>
         
         <div class="value-card">
-          <div class="value-icon">🔍</div>
-          <h3 class="value-title">Transparency</h3>
-          <p class="value-description">Operating with openness and honesty in all our endeavors and communications.</p>
+          <div class="value-icon">🏭</div>
+          <h3 class="value-title">Worker Power</h3>
+          <p class="value-description">We stand with working people and believe in democratic control of workplaces and communities by those who inhabit them.</p>
         </div>
         
         <div class="value-card">
-          <div class="value-icon">💡</div>
-          <h3 class="value-title">Innovation</h3>
-          <p class="value-description">Embracing new technologies and creative solutions to address community challenges.</p>
+          <div class="value-icon">🌍</div>
+          <h3 class="value-title">Solidarity</h3>
+          <p class="value-description">We recognize that our liberation is bound together, and we stand united across all lines of division.</p>
         </div>
       </div>
     </div>
 
-    <div class="cta-section">
-      <h2 class="cta-title">Join Our Mission</h2>
-      <a href="#" class="cta-button">Get Involved Today</a>
+    <div class="action-section">
+      <h2 class="action-title">Join the Movement</h2>
+      <a href="#" class="action-button">Organize With Us</a>
     </div>
 
     <!-- Page Navigator -->
