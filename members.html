@@ -4,532 +4,214 @@
 <meta charset="UTF-8">
 <title>Member Management - ACP</title>
 <style>
-  :root {
-    --red: #e63946;
-    --dark-red: #c1121f;
-    --yellow: #ffd166;
-    --dark-blue: #1d3557;
-    --light: #f1faee;
-    --gray: #8d99ae;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                url("SteelMillWrk.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: var(--light);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    line-height: 1.6;
-  }
+:root { --red: #e63946; --dark-red: #c1121f; --yellow: #ffd166; --dark-blue: #1d3557; --light: #f1faee; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+       background: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)), url("SteelMillWrk.jpg") center/cover fixed; color: var(--light); position: relative; }
+.industrial-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                     background-image: linear-gradient(rgba(29,53,87,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(29,53,87,0.1) 1px, transparent 1px); background-size: 50px 50px; z-index: -1; }
+.top-btn { position: fixed; top: 25px; right: 25px; width: 65px; height: 65px; background: var(--red); border: none; cursor: pointer; display: flex; 
+           align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: 0.3s; z-index: 1000; border-radius: 50%; }
+.top-btn:hover { box-shadow: 0 0 20px var(--red), 0 0 30px var(--red); transform: scale(1.1); background: var(--dark-red); }
+.top-btn img { width: 70%; height: 70%; object-fit: cover; border-radius: 50%; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 10; text-align: center; }
+.title-container { position: relative; display: inline-block; margin-bottom: 20px; }
+.title-backdrop { position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px; background: var(--dark-blue); z-index: 1; transform: rotate(-1deg); }
+.title-main { position: relative; background: var(--red); padding: 25px 50px; z-index: 3; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+              color: var(--light); font-size: 2.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border: 2px solid var(--yellow); }
+.subtitle { font-size: 1.3rem; color: var(--yellow); max-width: 600px; margin: 0 auto; font-weight: 300; letter-spacing: 1px; }
+.stat-card { background: rgba(29,53,87,0.9); padding: 30px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: inline-block; border-top: 5px solid var(--red); margin-bottom: 40px; }
+.stat-number { font-size: 3rem; font-weight: bold; color: var(--yellow); margin-bottom: 10px; }
+.admin-card { background: rgba(29,53,87,0.9); padding: 40px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: left; border-left: 5px solid var(--red); margin-bottom: 40px; }
+.admin-card h2 { color: var(--yellow); margin-bottom: 25px; text-align: center; font-size: 1.8rem; }
+.members-list { list-style: none; }
+.members-list li { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.9); }
+.admin-button { display: block; margin: 30px auto 0; padding: 15px 40px; background: var(--red); color: var(--light); border: none; border-radius: 4px; 
+               cursor: pointer; font-weight: 700; text-transform: uppercase; transition: all 0.3s; border: 2px solid var(--yellow); }
+.admin-button:hover { background: var(--dark-red); transform: translateY(-3px); }
+.public-message { background: rgba(29,53,87,0.9); padding: 30px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; border-top: 5px solid var(--yellow); margin-bottom: 40px; }
+.page-navigator { display: flex; align-items: center; justify-content: center; gap: 50px; margin-top: 40px; }
+.navigator-arrow { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: var(--red); border: 2px solid var(--yellow); 
+                   border-radius: 50%; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.navigator-arrow:hover { transform: scale(1.1); background: var(--dark-red); box-shadow: 0 0 20px var(--red); }
 
-  /* Industrial pattern overlay */
-  .industrial-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-      linear-gradient(rgba(29, 53, 87, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(29, 53, 87, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: -1;
-  }
+/* Enhanced Popup */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
 
-  /* Top-right button */
-  .top-btn {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    width: 65px;
-    height: 65px;
-    background: var(--red);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    transition: 0.3s;
-    z-index: 1000;
-    border-radius: 50%;
-  }
-  
-  .top-btn img {
-    width: 70%;
-    height: 70%;
-    object-fit: cover;
-    pointer-events: none;
-    border-radius: 50%;
-  }
-  
-  .top-btn:hover {
-    box-shadow: 0 0 20px var(--red), 0 0 30px var(--red);
-    transform: scale(1.1);
-    background: var(--dark-red);
-  }
+.popup {
+  background: rgba(29, 53, 87, 0.98);
+  border: 3px solid var(--red);
+  border-radius: 15px;
+  padding: 50px 40px 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(230, 57, 70, 0.4);
+  min-width: 380px;
+  max-width: 450px;
+  text-align: center;
+  position: relative;
+  animation: popupSlide 0.3s ease-out;
+}
 
-  /* Popup overlay */
-  .popup-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-  }
-  
-  .popup {
-    position: relative;
-    background: rgba(29, 53, 87, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 60px 60px 50px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(230, 57, 70, 0.3);
-    min-width: 400px;
-    max-width: 675px;
-    text-align: center;
-    animation: fadeIn 0.4s ease;
-    border: 2px solid var(--red);
-    color: var(--light);
-  }
-  
-  .close-popup {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    line-height: 1;
-    text-align: center;
-    color: var(--light);
-    transition: 0.2s;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .close-popup:hover {
-    color: var(--red);
-    transform: scale(1.2);
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
-  .popup button {
-    width: 50%;
-    padding: 12px;
-    margin-top: 15px;
-    border: none;
-    background: var(--red);
-    cursor: pointer;
-    border-radius: 4px;
-    transition: 0.2s;
-    color: var(--light);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .popup button:hover {
-    background: var(--dark-red);
-    box-shadow: 0 0 10px var(--red);
-  }
+@keyframes popupSlide {
+  from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
 
-  /* Main Container */
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    position: relative;
-    z-index: 10;
-    text-align: center;
-  }
+.popup-content {
+  margin-bottom: 25px;
+  font-size: 1.3rem;
+  color: var(--light);
+  font-weight: 500;
+}
 
-  /* Header Section */
-  .header {
-    margin-bottom: 60px;
-    position: relative;
-  }
+.popup button {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  border: none;
+  background: var(--red);
+  color: var(--light);
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+}
 
-  .title-container {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 20px;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-  }
+.popup button:hover {
+  background: var(--dark-red);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+}
 
-  .title-backdrop {
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    background: var(--dark-blue);
-    z-index: 1;
-    transform: rotate(-1deg);
-  }
+.popup button:active {
+  transform: translateY(0);
+}
 
-  .title-main {
-    position: relative;
-    background: var(--red);
-    padding: 25px 50px;
-    z-index: 3;
-    display: inline-block;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    color: var(--light);
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    border: 2px solid var(--yellow);
-  }
+.popup-divider {
+  margin: 20px 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
 
-  .subtitle {
-    font-size: 1.3rem;
-    color: var(--yellow);
-    max-width: 600px;
-    margin: 0 auto;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.3s forwards;
-    font-weight: 300;
-    letter-spacing: 1px;
-  }
-
-  /* Member Stats */
-  .member-stats {
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.6s forwards;
-  }
-
-  .stat-card {
-    background: rgba(29, 53, 87, 0.9);
-    padding: 30px;
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    display: inline-block;
-    border-top: 5px solid var(--red);
-  }
-
-  .stat-number {
-    font-size: 3rem;
-    font-weight: bold;
-    color: var(--yellow);
-    margin-bottom: 10px;
-  }
-
-  .stat-label {
-    font-size: 1.2rem;
-    color: var(--light);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  /* Admin Section */
-  .admin-section {
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.9s forwards;
-  }
-
-  .admin-card {
-    background: rgba(29, 53, 87, 0.9);
-    padding: 40px;
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    text-align: left;
-    border-left: 5px solid var(--red);
-    position: relative;
-  }
-
-  .admin-card::before {
-    content: "⚙️";
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 2rem;
-    color: var(--red);
-    opacity: 0.7;
-  }
-
-  .admin-card h2 {
-    color: var(--yellow);
-    margin-bottom: 25px;
-    text-align: center;
-    font-size: 1.8rem;
-    margin-left: 40px;
-  }
-
-  .members-list {
-    list-style: none;
-    margin-left: 40px;
-  }
-
-  .members-list li {
-    padding: 15px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .members-list li:last-child {
-    border-bottom: none;
-  }
-
-  .admin-button {
-    display: block;
-    margin: 30px auto 0;
-    padding: 15px 40px;
-    background: var(--red);
-    color: var(--light);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--yellow);
-  }
-
-  .admin-button:hover {
-    background: var(--dark-red);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Public Message */
-  .public-message {
-    background: rgba(29, 53, 87, 0.9);
-    padding: 30px;
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    border-top: 5px solid var(--yellow);
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.6s forwards;
-  }
-
-  .public-message p {
-    font-size: 1.2rem;
-    color: var(--light);
-    line-height: 1.6;
-  }
-
-  /* Page Navigator */
-  .page-navigator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 50px;
-    margin-top: 40px;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.2s forwards;
-  }
-
-  .navigator-arrow {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--red);
-    border: 2px solid var(--yellow);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .navigator-arrow:hover {
-    transform: scale(1.1);
-    background: var(--dark-red);
-    box-shadow: 0 0 20px var(--red);
-  }
-
-  .arrow-icon {
-    font-size: 1.5rem;
-    color: var(--light);
-    font-weight: bold;
-  }
-
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .title-main {
-      font-size: 1.8rem;
-      padding: 20px 30px;
-    }
-    
-    .container {
-      padding: 20px 15px;
-    }
-    
-    .admin-card {
-      padding: 25px;
-    }
-    
-    .stat-number {
-      font-size: 2.5rem;
-    }
-  }
+@media (max-width: 768px) { .title-main { font-size: 1.8rem; padding: 20px 30px; } .admin-card { padding: 25px; } .stat-number { font-size: 2.5rem; } }
 </style>
 </head>
 <body>
-  <!-- Industrial Overlay -->
-  <div class="industrial-overlay"></div>
+<div class="industrial-overlay"></div>
+<button class="top-btn" id="menuBtn"><img src="accimg.png" alt="Account"></button>
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <div id="popupContent"></div>
+  </div>
+</div>
+<div class="container">
+  <div class="header"><div class="title-container"><div class="title-backdrop"></div><h1 class="title-main">Member Management</h1></div>
+  <p class="subtitle">Solidarity in Numbers • Collective Strength</p></div>
 
-  <!-- Top-right account button -->
-  <button class="top-btn" id="menuBtn">
-    <img src="accimg.png" alt="Account">
-  </button>
-
-  <!-- Popup -->
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-      <button class="close-popup" id="closePopup">&times;</button>
-      <div id="popupContent"></div>
+  <div class="member-stats">
+    <div class="stat-card">
+      <div class="stat-number" id="memberCount">0</div>
+      <div class="stat-label">Total Members</div>
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="container">
-    <div class="header">
-      <div class="title-container">
-        <div class="title-backdrop"></div>
-        <h1 class="title-main">Member Management</h1>
-      </div>
-      <p class="subtitle">Only You Can Help • Join Now!</p>
-    </div>
+  <div class="public-message" id="publicMessage">
+    <p>Our growing community demonstrates the power of collective action. Every member strengthens our movement and brings us closer to our goals of community empowerment and solidarity.</p>
+  </div>
 
-    <!-- Member Statistics - Visible to All -->
-    <div class="member-stats">
-      <div class="stat-card">
-        <div class="stat-number" id="memberCount">0</div>
-        <div class="stat-label">Total Members</div>
-      </div>
-    </div>
-
-    <!-- Public Message for Non-Admins -->
-    <div class="public-message" id="publicMessage">
-      <p>These people are working to improve their community.</p>
-    </div>
-
-    <!-- Admin-Only Section -->
-    <div class="admin-section" id="adminSection" style="display: none;">
-      <div class="admin-card">
-        <h2>All Accounts (Admin Only)</h2>
-        <ul class="members-list" id="memberListUL"></ul>
-        <button class="admin-button" id="emailButton">Send Email to All Members</button>
-      </div>
-    </div>
-
-    <!-- Page Navigator -->
-    <div class="page-navigator">
-      <div class="navigator-arrow left-arrow" onclick="location.href='doing.html'">
-        <span class="arrow-icon">←</span>
-      </div>
-      <div class="navigator-arrow right-arrow" onclick="location.href='index.html'">
-        <span class="arrow-icon">→</span>
-      </div>
+  <div class="admin-section" id="adminSection" style="display: none;">
+    <div class="admin-card">
+      <h2>All Accounts (Admin Only)</h2>
+      <ul class="members-list" id="memberListUL"></ul>
+      <button class="admin-button" id="emailButton">Send Email to All Members</button>
     </div>
   </div>
 
-  <script>
-    const key = "loggedInUser";
-    const overlay = document.getElementById("popupOverlay");
-    const popup = document.getElementById("popupContent");
+  <div class="page-navigator">
+    <div class="navigator-arrow" onclick="location.href='doing.html'"><span style="font-size:1.5rem;color:var(--light);font-weight:bold;">←</span></div>
+    <div class="navigator-arrow" onclick="location.href='index.html'"><span style="font-size:1.5rem;color:var(--light);font-weight:bold;">→</span></div>
+  </div>
+</div>
 
-    // Get current user and users data
-    const currentUser = JSON.parse(localStorage.getItem(key));
-    const users = JSON.parse(localStorage.getItem('users')) || [];
+<script>
+const key = "loggedInUser", overlay = document.getElementById("popupOverlay"), popup = document.getElementById("popupContent");
 
-    // Update member count for everyone
-    document.getElementById('memberCount').innerText = users.length;
+// Get current user and users data
+const currentUser = JSON.parse(localStorage.getItem(key));
+const users = JSON.parse(localStorage.getItem('users')) || [];
 
-    // If current user is admin, show admin section
-    if (currentUser && currentUser.role === 'admin') {
-      document.getElementById('adminSection').style.display = 'block';
-      document.getElementById('publicMessage').style.display = 'none';
+// Update member count for everyone
+document.getElementById('memberCount').innerText = users.length;
 
-      const ul = document.getElementById('memberListUL');
-      users.forEach(user => {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>`;
-        ul.appendChild(li);
-      });
+// If current user is admin, show admin section
+if (currentUser && currentUser.role === 'admin') {
+  document.getElementById('adminSection').style.display = 'block';
+  document.getElementById('publicMessage').style.display = 'none';
 
-      document.getElementById('emailButton').addEventListener('click', () => {
-        alert('Email functionality would be implemented here to contact all ' + users.length + ' members.');
-      });
-    }
+  const ul = document.getElementById('memberListUL');
+  users.forEach(user => {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>`;
+    ul.appendChild(li);
+  });
 
-    // Popup functionality
-    function updatePopup() {
-      popup.innerHTML = "";
-      const user = JSON.parse(localStorage.getItem(key));
-      if (user) {
-        popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">Logged in as: ${user.username}${user.role === "admin" ? " (admin)" : ""}</div>`;
-        const btn = document.createElement("button");
-        btn.textContent = "Logout";
-        btn.onclick = () => {
-          localStorage.removeItem(key);
-          location.reload();
-        };
-        popup.appendChild(btn);
-      } else {
-        const btn = document.createElement("button");
-        btn.textContent = "Login / Sign Up";
-        btn.onclick = () => location.href = "login.html";
-        popup.appendChild(btn);
-      }
-    }
+  document.getElementById('emailButton').addEventListener('click', () => {
+    alert('Email functionality would be implemented here to contact all ' + users.length + ' members.');
+  });
+}
 
-    document.getElementById("menuBtn").onclick = () => {
-      updatePopup();
-      overlay.style.display = "flex";
-    };
-    document.getElementById("closePopup").onclick = () => overlay.style.display = "none";
-    overlay.onclick = e => {
-      if (e.target === overlay) overlay.style.display = "none";
-    };
-  </script>
+function updatePopup() {
+  const user = JSON.parse(localStorage.getItem(key));
+  
+  if (user) {
+    popup.innerHTML = `
+      <div class="popup-content">
+        Welcome back, <strong>${user.username}</strong>${user.role === "admin" ? " <span style='color:var(--yellow);'>(Admin)</span>" : ""}
+      </div>
+      <div class="popup-divider"></div>
+      <button onclick="location.href='members.html'">Member Portal</button>
+      <button onclick="logout()">Logout</button>
+    `;
+  } else {
+    popup.innerHTML = `
+      <div class="popup-content">
+        Join Our Movement
+      </div>
+      <div style="margin-bottom:20px;color:rgba(255,255,255,0.8);font-size:0.95rem;">
+        Access member features and contribute to our community
+      </div>
+      <button onclick="location.href='login.html'">Login / Sign Up</button>
+      <div class="popup-divider"></div>
+      <button onclick="overlay.style.display='none'" style="background:transparent;border:2px solid var(--red);">
+        Continue Browsing
+      </button>
+    `;
+  }
+}
+
+function logout() {
+  localStorage.removeItem(key);
+  location.reload();
+}
+
+document.getElementById("menuBtn").onclick = () => { 
+  updatePopup(); 
+  overlay.style.display = "flex"; 
+};
+
+overlay.onclick = e => { if (e.target === overlay) overlay.style.display = "none"; };
+</script>
 </body>
 </html>
