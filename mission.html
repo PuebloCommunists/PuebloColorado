@@ -63,4 +63,36 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
       <div class="callout-box">"From each according to their ability, to each according to their needs"</div>
     </div>
   </div>
-  <div class="values-section"><h2 class="section-title" style="font-size:2rem;text-align:center;margin-bottom:40px
+  <div class="values-section"><h2 class="section-title" style="font-size:2rem;text-align:center;margin-bottom:40px;color:var(--yellow);">Our Principles</h2>
+    <div class="values-grid">
+      <div class="value-card"><div class="value-icon">⚖️</div><h3 class="value-title">Equality</h3><p>We believe in a society where all people have equal access to resources, opportunities, and dignity.</p></div>
+      <div class="value-card"><div class="value-icon">🏭</div><h3 class="value-title">Worker Power</h3><p>We stand with working people and believe in democratic control of workplaces and communities.</p></div>
+      <div class="value-card"><div class="value-icon">🌍</div><h3 class="value-title">Solidarity</h3><p>We recognize that our liberation is bound together, and we stand united across all lines of division.</p></div>
+    </div>
+  </div>
+  <div class="action-section" style="text-align:center;margin-bottom:60px;"><h2 class="action-title" style="font-size:2rem;margin-bottom:30px;color:var(--yellow);">Join the Movement</h2>
+    <a href="#" class="action-button">Organize With Us</a></div>
+  <div class="page-navigator">
+    <div class="navigator-arrow" onclick="location.href='index.html'"><span style="font-size:1.5rem;color:var(--light);font-weight:bold;">←</span></div>
+    <div class="navigator-arrow" onclick="location.href='doing.html'"><span style="font-size:1.5rem;color:var(--light);font-weight:bold;">→</span></div>
+  </div>
+</div>
+<script>
+const key = "loggedInUser", overlay = document.getElementById("popupOverlay"), popup = document.getElementById("popupContent");
+function updatePopup() {
+  popup.innerHTML = "";
+  const user = JSON.parse(localStorage.getItem(key));
+  if (user) {
+    popup.innerHTML = `<div style="margin-bottom:20px;">Logged in as: ${user.username}${user.role==="admin"?" (admin)":""}</div>`;
+    const btn = document.createElement("button"); btn.textContent = "Logout"; btn.onclick = () => { localStorage.removeItem(key); location.reload(); };
+    popup.appendChild(btn);
+  } else {
+    const btn = document.createElement("button"); btn.textContent = "Login / Sign Up"; btn.onclick = () => location.href = "login.html"; popup.appendChild(btn);
+  }
+}
+document.getElementById("menuBtn").onclick = () => { updatePopup(); overlay.style.display = "flex"; };
+document.getElementById("closePopup").onclick = () => overlay.style.display = "none";
+overlay.onclick = e => { if (e.target === overlay) overlay.style.display = "none"; };
+</script>
+</body>
+</html>

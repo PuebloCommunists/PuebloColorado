@@ -4,480 +4,76 @@
 <meta charset="UTF-8">
 <title>What We're Doing - ACP</title>
 <style>
-  :root {
-    --red: #e63946;
-    --dark-red: #c1121f;
-    --yellow: #ffd166;
-    --dark-blue: #1d3557;
-    --light: #f1faee;
-    --gray: #8d99ae;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                url("SteelMillWrk.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: var(--light);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    line-height: 1.6;
-  }
-
-  /* Industrial pattern overlay */
-  .industrial-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-      linear-gradient(rgba(29, 53, 87, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(29, 53, 87, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: -1;
-  }
-
-  /* Top-right button */
-  .top-btn {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    width: 65px;
-    height: 65px;
-    background: var(--red);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    transition: 0.3s;
-    z-index: 1000;
-    border-radius: 50%;
-  }
-  
-  .top-btn img {
-    width: 70%;
-    height: 70%;
-    object-fit: cover;
-    pointer-events: none;
-    border-radius: 50%;
-  }
-  
-  .top-btn:hover {
-    box-shadow: 0 0 20px var(--red), 0 0 30px var(--red);
-    transform: scale(1.1);
-    background: var(--dark-red);
-  }
-
-  /* Popup overlay */
-  .popup-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-  }
-  
-  .popup {
-    position: relative;
-    background: rgba(29, 53, 87, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 60px 60px 50px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(230, 57, 70, 0.3);
-    min-width: 400px;
-    max-width: 675px;
-    text-align: center;
-    animation: fadeIn 0.4s ease;
-    border: 2px solid var(--red);
-    color: var(--light);
-  }
-  
-  .close-popup {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    line-height: 1;
-    text-align: center;
-    color: var(--light);
-    transition: 0.2s;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .close-popup:hover {
-    color: var(--red);
-    transform: scale(1.2);
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
-  .popup button {
-    width: 50%;
-    padding: 12px;
-    margin-top: 15px;
-    border: none;
-    background: var(--red);
-    cursor: pointer;
-    border-radius: 4px;
-    transition: 0.2s;
-    color: var(--light);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .popup button:hover {
-    background: var(--dark-red);
-    box-shadow: 0 0 10px var(--red);
-  }
-
-  /* Main Container */
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    position: relative;
-    z-index: 10;
-    text-align: center;
-  }
-
-  /* Header Section */
-  .header {
-    margin-bottom: 60px;
-    position: relative;
-  }
-
-  .title-container {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 20px;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-  }
-
-  .title-backdrop {
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    background: var(--dark-blue);
-    z-index: 1;
-    transform: rotate(-1deg);
-  }
-
-  .title-main {
-    position: relative;
-    background: var(--red);
-    padding: 25px 50px;
-    z-index: 3;
-    display: inline-block;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    color: var(--light);
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    border: 2px solid var(--yellow);
-  }
-
-  .subtitle {
-    font-size: 1.3rem;
-    color: var(--yellow);
-    max-width: 600px;
-    margin: 0 auto;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.3s forwards;
-    font-weight: 300;
-    letter-spacing: 1px;
-  }
-
-  /* Content Section */
-  .content-section {
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.6s forwards;
-  }
-
-  .content-card {
-    background: rgba(29, 53, 87, 0.9);
-    border-left: 5px solid var(--red);
-    padding: 40px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    text-align: left;
-    position: relative;
-    margin-bottom: 40px;
-  }
-
-  .content-card::before {
-    content: "⚒";
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 2rem;
-    color: var(--red);
-    opacity: 0.7;
-  }
-
-  .content-card p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 2;
-    margin-left: 40px;
-  }
-
-  /* Action Grid */
-  .action-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.9s forwards;
-  }
-
-  .action-item {
-    background: rgba(29, 53, 87, 0.9);
-    padding: 30px 20px;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-    border-top: 5px solid var(--red);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  }
-
-  .action-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  }
-
-  .action-icon {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: var(--yellow);
-  }
-
-  .action-title {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    color: var(--light);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .action-description {
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
-  }
-
-  /* Page Navigator */
-  .page-navigator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 50px;
-    margin-top: 40px;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.2s forwards;
-  }
-
-  .navigator-arrow {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--red);
-    border: 2px solid var(--yellow);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  }
-
-  .navigator-arrow:hover {
-    transform: scale(1.1);
-    background: var(--dark-red);
-    box-shadow: 0 0 20px var(--red);
-  }
-
-  .arrow-icon {
-    font-size: 1.5rem;
-    color: var(--light);
-    font-weight: bold;
-  }
-
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Responsive Design */
-  @media (max-width: 992px) {
-    .action-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .title-main {
-      font-size: 2rem;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .action-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .title-main {
-      font-size: 1.8rem;
-      padding: 20px 30px;
-    }
-    
-    .container {
-      padding: 20px 15px;
-    }
-    
-    .content-card {
-      padding: 25px;
-    }
-  }
+:root { --red: #e63946; --dark-red: #c1121f; --yellow: #ffd166; --dark-blue: #1d3557; --light: #f1faee; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+       background: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)), url("SteelMillWrk.jpg") center/cover fixed; color: var(--light); position: relative; }
+.industrial-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                     background-image: linear-gradient(rgba(29,53,87,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(29,53,87,0.1) 1px, transparent 1px); background-size: 50px 50px; z-index: -1; }
+.top-btn { position: fixed; top: 25px; right: 25px; width: 65px; height: 65px; background: var(--red); border: none; cursor: pointer; display: flex; 
+           align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: 0.3s; z-index: 1000; border-radius: 50%; }
+.top-btn:hover { box-shadow: 0 0 20px var(--red), 0 0 30px var(--red); transform: scale(1.1); background: var(--dark-red); }
+.top-btn img { width: 70%; height: 70%; object-fit: cover; border-radius: 50%; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 10; text-align: center; }
+.title-container { position: relative; display: inline-block; margin-bottom: 20px; }
+.title-backdrop { position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px; background: var(--dark-blue); z-index: 1; transform: rotate(-1deg); }
+.title-main { position: relative; background: var(--red); padding: 25px 50px; z-index: 3; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+              color: var(--light); font-size: 2.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; border: 2px solid var(--yellow); }
+.subtitle { font-size: 1.3rem; color: var(--yellow); max-width: 600px; margin: 0 auto; font-weight: 300; letter-spacing: 1px; }
+.content-card { background: rgba(29,53,87,0.9); border-left: 5px solid var(--red); padding: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: left; margin-bottom: 40px; }
+.content-card p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px; }
+.action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 60px; }
+.action-item { background: rgba(29,53,87,0.9); padding: 30px 20px; text-align: center; border-top: 5px solid var(--red); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.action-icon { font-size: 2.5rem; margin-bottom: 20px; color: var(--yellow); }
+.action-title { font-size: 1.3rem; margin-bottom: 15px; color: var(--light); text-transform: uppercase; letter-spacing: 1px; }
+.page-navigator { display: flex; align-items: center; justify-content: center; gap: 50px; margin-top: 40px; }
+.navigator-arrow { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: var(--red); border: 2px solid var(--yellow); 
+                   border-radius: 50%; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.navigator-arrow:hover { transform: scale(1.1); background: var(--dark-red); box-shadow: 0 0 20px var(--red); }
+.popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 2000; }
+.popup { position: relative; background: rgba(29,53,87,0.95); padding: 60px; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); text-align: center; border: 2px solid var(--red); color: var(--light); }
+.close-popup { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--light); }
+.popup button { width: 50%; padding: 12px; margin-top: 15px; border: none; background: var(--red); cursor: pointer; border-radius: 4px; color: var(--light); font-weight: 600; }
+@media (max-width: 768px) { .action-grid { grid-template-columns: 1fr; } .title-main { font-size: 1.8rem; padding: 20px 30px; } }
 </style>
 </head>
 <body>
-  <!-- Industrial Overlay -->
-  <div class="industrial-overlay"></div>
-
-  <!-- Top-right account button -->
-  <button class="top-btn" id="menuBtn">
-    <img src="accimg.png" alt="Account">
-  </button>
-
-  <!-- Popup -->
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-      <button class="close-popup" id="closePopup">&times;</button>
-      <div id="popupContent"></div>
-    </div>
+<div class="industrial-overlay"></div>
+<button class="top-btn" id="menuBtn"><img src="accimg.png" alt="Account"></button>
+<div class="popup-overlay" id="popupOverlay"><div class="popup"><button class="close-popup" id="closePopup">&times;</button><div id="popupContent"></div></div></div>
+<div class="container">
+  <div class="header"><div class="title-container"><div class="title-backdrop"></div><h1 class="title-main">What We're Doing</h1></div>
+  <p class="subtitle">Action • Solidarity • Progress</p></div>
+  <div class="content-card">
+    <p>Our community initiatives focus on education, mutual aid, and hands-on projects that strengthen our local environment. We are actively engaging members to collaborate, volunteer, and share their skills in meaningful ways.</p>
+    <p>From organizing workshops and discussion groups to implementing community service projects, we strive to ensure every participant feels empowered and connected.</p>
   </div>
-
-  <!-- Main Content -->
-  <div class="container">
-    <div class="header">
-      <div class="title-container">
-        <div class="title-backdrop"></div>
-        <h1 class="title-main">What We're Doing</h1>
-      </div>
-      <p class="subtitle">Action • Solidarity • Progress</p>
-    </div>
-
-    <div class="content-section">
-      <div class="content-card">
-        <p>Our community initiatives focus on education, mutual aid, and hands-on projects that strengthen our local environment. We are actively engaging members to collaborate, volunteer, and share their skills in meaningful ways.</p>
-        <p>From organizing workshops and discussion groups to implementing community service projects, we strive to ensure every participant feels empowered and connected.</p>
-      </div>
-    </div>
-
-    <div class="action-grid">
-      <div class="action-item">
-        <div class="action-icon">📚</div>
-        <h3 class="action-title">Education</h3>
-        <p class="action-description">Organizing workshops and discussion groups to share knowledge and build consciousness.</p>
-      </div>
-      
-      <div class="action-item">
-        <div class="action-icon">🤝</div>
-        <h3 class="action-title">Mutual Aid</h3>
-        <p class="action-description">Creating support networks and resource sharing to meet community needs directly.</p>
-      </div>
-      
-      <div class="action-item">
-        <div class="action-icon">🏗️</div>
-        <h3 class="action-title">Hands-On Projects</h3>
-        <p class="action-description">Implementing community service projects that strengthen our local environment.</p>
-      </div>
-    </div>
-
-    <!-- Page Navigator -->
-    <div class="page-navigator">
-      <div class="navigator-arrow left-arrow" onclick="location.href='mission.html'">
-        <span class="arrow-icon">←</span>
-      </div>
-      <div class="navigator-arrow right-arrow" onclick="location.href='index.html'">
-        <span class="arrow-icon">→</span>
-      </div>
-    </div>
+  <div class="action-grid">
+    <div class="action-item"><div class="action-icon">📚</div><h3 class="action-title">Education</h3><p>Organizing workshops and discussion groups to share knowledge and build consciousness.</p></div>
+    <div class="action-item"><div class="action-icon">🤝</div><h3 class="action-title">Mutual Aid</h3><p>Creating support networks and resource sharing to meet community needs directly.</p></div>
+    <div class="action-item"><div class="action-icon">🏗️</div><h3 class="action-title">Hands-On Projects</h3><p>Implementing community service projects that strengthen our local environment.</p></div>
   </div>
-
-  <script>
-    const key = "loggedInUser";
-    const overlay = document.getElementById("popupOverlay");
-    const popup = document.getElementById("popupContent");
-
-    function updatePopup() {
-      popup.innerHTML = "";
-      const user = JSON.parse(localStorage.getItem(key));
-      if (user) {
-        popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">Logged in as: ${user.username}${user.role === "admin" ? " (admin)" : ""}</div>`;
-        const btn = document.createElement("button");
-        btn.textContent = "Logout";
-        btn.onclick = () => {
-          localStorage.removeItem(key);
-          location.reload();
-        };
-        popup.appendChild(btn);
-      } else {
-        const btn = document.createElement("button");
-        btn.textContent = "Login / Sign Up";
-        btn.onclick = () => location.href = "login.html";
-        popup.appendChild(btn);
-      }
-    }
-
-    document.getElementById("menuBtn").onclick = () => {
-      updatePopup();
-      overlay.style.display = "flex";
-    };
-    document.getElementById("closePopup").onclick = () => overlay.style.display = "none";
-    overlay.onclick = e => {
-      if (e.target === overlay) overlay.style.display = "none";
-    };
-  </script>
+  <div class="page-navigator">
+    <div class="navigator-arrow" onclick="location.href='mission.html'"><span style="font-size:1.5rem;color:var(--light);font-weight:bold;">←</span></div>
+    <div class="navigator-arrow" onclick="location.href='members.html'"><span style="font-size:1.5rem;color:var(--light);font-weight:bold;">→</span></div>
+  </div>
+</div>
+<script>
+const key = "loggedInUser", overlay = document.getElementById("popupOverlay"), popup = document.getElementById("popupContent");
+function updatePopup() {
+  popup.innerHTML = "";
+  const user = JSON.parse(localStorage.getItem(key));
+  if (user) {
+    popup.innerHTML = `<div style="margin-bottom:20px;">Logged in as: ${user.username}${user.role==="admin"?" (admin)":""}</div>`;
+    const btn = document.createElement("button"); btn.textContent = "Logout"; btn.onclick = () => { localStorage.removeItem(key); location.reload(); };
+    popup.appendChild(btn);
+  } else {
+    const btn = document.createElement("button"); btn.textContent = "Login / Sign Up"; btn.onclick = () => location.href = "login.html"; popup.appendChild(btn);
+  }
+}
+document.getElementById("menuBtn").onclick = () => { updatePopup(); overlay.style.display = "flex"; };
+document.getElementById("closePopup").onclick = () => overlay.style.display = "none";
+overlay.onclick = e => { if (e.target === overlay) overlay.style.display = "none"; };
+</script>
 </body>
 </html>
