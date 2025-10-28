@@ -38,17 +38,88 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 .navigator-arrow { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: var(--red); border: 2px solid var(--yellow); 
                    border-radius: 50%; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 .navigator-arrow:hover { transform: scale(1.1); background: var(--dark-red); box-shadow: 0 0 20px var(--red); }
-.popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 2000; }
-.popup { position: relative; background: rgba(29,53,87,0.95); padding: 60px; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); text-align: center; border: 2px solid var(--red); color: var(--light); }
-.close-popup { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--light); }
-.popup button { width: 50%; padding: 12px; margin-top: 15px; border: none; background: var(--red); cursor: pointer; border-radius: 4px; color: var(--light); font-weight: 600; }
+
+/* Enhanced Popup */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.popup {
+  background: rgba(29, 53, 87, 0.98);
+  border: 3px solid var(--red);
+  border-radius: 15px;
+  padding: 50px 40px 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(230, 57, 70, 0.4);
+  min-width: 380px;
+  max-width: 450px;
+  text-align: center;
+  position: relative;
+  animation: popupSlide 0.3s ease-out;
+}
+
+@keyframes popupSlide {
+  from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.popup-content {
+  margin-bottom: 25px;
+  font-size: 1.3rem;
+  color: var(--light);
+  font-weight: 500;
+}
+
+.popup button {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  border: none;
+  background: var(--red);
+  color: var(--light);
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+}
+
+.popup button:hover {
+  background: var(--dark-red);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+}
+
+.popup button:active {
+  transform: translateY(0);
+}
+
+.popup-divider {
+  margin: 20px 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
 @media (max-width: 768px) { .mission-content, .values-grid { grid-template-columns: 1fr; } .title-main { font-size: 1.8rem; padding: 20px 30px; } }
 </style>
 </head>
 <body>
 <div class="industrial-overlay"></div>
 <button class="top-btn" id="menuBtn"><img src="accimg.png" alt="Account"></button>
-<div class="popup-overlay" id="popupOverlay"><div class="popup"><button class="close-popup" id="closePopup">&times;</button><div id="popupContent"></div></div></div>
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <div id="popupContent"></div>
+  </div>
+</div>
 <div class="container">
   <div class="header"><div class="title-container"><div class="title-backdrop"></div><h1 class="title-main">Our Mission Statement</h1></div>
   <p class="subtitle">Solidarity • Community • Progress</p></div>
@@ -77,21 +148,49 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
     <div class="navigator-arrow" onclick="location.href='doing.html'"><span style="font-size:1.5rem;color:var(--light);font-weight:bold;">→</span></div>
   </div>
 </div>
+
 <script>
 const key = "loggedInUser", overlay = document.getElementById("popupOverlay"), popup = document.getElementById("popupContent");
+
 function updatePopup() {
-  popup.innerHTML = "";
   const user = JSON.parse(localStorage.getItem(key));
+  
   if (user) {
-    popup.innerHTML = `<div style="margin-bottom:20px;">Logged in as: ${user.username}${user.role==="admin"?" (admin)":""}</div>`;
-    const btn = document.createElement("button"); btn.textContent = "Logout"; btn.onclick = () => { localStorage.removeItem(key); location.reload(); };
-    popup.appendChild(btn);
+    popup.innerHTML = `
+      <div class="popup-content">
+        Welcome back, <strong>${user.username}</strong>${user.role === "admin" ? " <span style='color:var(--yellow);'>(Admin)</span>" : ""}
+      </div>
+      <div class="popup-divider"></div>
+      <button onclick="location.href='members.html'">Member Portal</button>
+      <button onclick="logout()">Logout</button>
+    `;
   } else {
-    const btn = document.createElement("button"); btn.textContent = "Login / Sign Up"; btn.onclick = () => location.href = "login.html"; popup.appendChild(btn);
+    popup.innerHTML = `
+      <div class="popup-content">
+        Join Our Movement
+      </div>
+      <div style="margin-bottom:20px;color:rgba(255,255,255,0.8);font-size:0.95rem;">
+        Access member features and contribute to our community
+      </div>
+      <button onclick="location.href='login.html'">Login / Sign Up</button>
+      <div class="popup-divider"></div>
+      <button onclick="overlay.style.display='none'" style="background:transparent;border:2px solid var(--red);">
+        Continue Browsing
+      </button>
+    `;
   }
 }
-document.getElementById("menuBtn").onclick = () => { updatePopup(); overlay.style.display = "flex"; };
-document.getElementById("closePopup").onclick = () => overlay.style.display = "none";
+
+function logout() {
+  localStorage.removeItem(key);
+  location.reload();
+}
+
+document.getElementById("menuBtn").onclick = () => { 
+  updatePopup(); 
+  overlay.style.display = "flex"; 
+};
+
 overlay.onclick = e => { if (e.target === overlay) overlay.style.display = "none"; };
 </script>
 </body>
