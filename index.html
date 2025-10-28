@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Login | Organize</title>
+<title>Home | Organize</title>
 <style>
   :root {
     --red: #e63946;
@@ -14,76 +14,47 @@
     --gray: #8d99ae;
   }
   
-  body { 
-    font-family: Arial, Helvetica, sans-serif; 
-    background: linear-gradient(135deg,#ff5252,#000); 
-    height:100vh; 
-    margin:0; 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-    color:white; 
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url("SteelMillWrk.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--light);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: relative;
+    line-height: 1.6;
   }
-  
-  .container { 
-    width:360px; 
-    padding:2rem; 
-    border-radius:12px; 
-    background: rgba(255,255,255,0.06); 
-    box-shadow:0 6px 24px rgba(0,0,0,0.4); 
-    text-align:center; 
+
+  /* Industrial pattern overlay */
+  .industrial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(29, 53, 87, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29, 53, 87, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: -1;
   }
-  
-  h2 { 
-    margin:0 0 1rem 0; 
-    color:white; 
-  }
-  
-  input { 
-    width:92%; 
-    padding:10px; 
-    margin:8px 0; 
-    border-radius:8px; 
-    border:none; 
-    outline:none; 
-  }
-  
-  button { 
-    width:95%; 
-    padding:10px; 
-    margin-top:10px; 
-    border-radius:8px; 
-    border:none; 
-    cursor:pointer; 
-    font-weight:bold; 
-  }
-  
-  .btn-white { 
-    background:white; 
-    color:black; 
-  }
-  
-  .btn-primary { 
-    background:#ff5252; 
-    color:white; 
-  }
-  
-  .toggle { 
-    margin-top:10px; 
-    color:#ddd; 
-    cursor:pointer; 
-    font-size:0.95rem; 
-  }
-  
-  .note { 
-    margin-top:8px; 
-    font-size:0.85rem; 
-    color:#eee; 
-    opacity:0.9; 
-  }
-  
-  /* Top-right button - matching mission.html style */
+
+  /* Top-right button */
   .top-btn {
     position: fixed;
     top: 25px;
@@ -144,51 +115,241 @@
   }
   
   .close-popup {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    line-height: 1;
-    text-align: center;
-    color: var(--light);
-    transition: 0.2s;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .close-popup:hover {
-    color: var(--red);
-    transform: scale(1.2);
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  /* Centered close button for login status popup */
-  .centered-close {
     position: static;
     display: block;
     margin: 20px auto 0;
     background: var(--red);
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 30px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
     transition: 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
-  .centered-close:hover {
+  .close-popup:hover {
     background: var(--dark-red);
     transform: scale(1.05);
+    box-shadow: 0 0 10px var(--red);
   }
 
+  /* Main Container */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 10;
+    text-align: center;
+  }
+
+  /* Header Section */
+  .header {
+    margin-bottom: 60px;
+    position: relative;
+  }
+
+  .title-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  .title-backdrop {
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    background: var(--dark-blue);
+    z-index: 1;
+    transform: rotate(-1deg);
+  }
+
+  .title-main {
+    position: relative;
+    background: var(--red);
+    padding: 25px 50px;
+    z-index: 3;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: var(--light);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 2px solid var(--yellow);
+  }
+
+  .subtitle {
+    font-size: 1.3rem;
+    color: var(--yellow);
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.3s forwards;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.6s forwards;
+  }
+
+  .hero-text {
+    background: rgba(29, 53, 87, 0.9);
+    border-left: 5px solid var(--red);
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    position: relative;
+    margin-bottom: 30px;
+  }
+
+  .hero-text::before {
+    content: "⚒";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 2rem;
+    color: var(--red);
+    opacity: 0.7;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+    margin-left: 40px;
+  }
+
+  /* Action Grid */
+  .action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.9s forwards;
+  }
+
+  .action-card {
+    background: rgba(29, 53, 87, 0.9);
+    padding: 30px 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    border-top: 5px solid var(--red);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .action-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .action-icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--yellow);
+  }
+
+  .action-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: var(--light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .action-description {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+  }
+
+  /* Join Section */
+  .join-section {
+    text-align: center;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.2s forwards;
+  }
+
+  .join-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--yellow);
+  }
+
+  .join-button {
+    display: inline-block;
+    padding: 15px 40px;
+    background: var(--red);
+    color: var(--light);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--yellow);
+  }
+
+  .join-button:hover {
+    background: var(--dark-red);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Page Navigator */
+  .page-navigator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 40px;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.5s forwards;
+  }
+
+  .navigator-arrow {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--red);
+    border: 2px solid var(--yellow);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .navigator-arrow:hover {
+    transform: scale(1.1);
+    background: var(--dark-red);
+    box-shadow: 0 0 20px var(--red);
+  }
+
+  .arrow-icon {
+    font-size: 1.5rem;
+    color: var(--light);
+    font-weight: bold;
+  }
+
+  /* Animations */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -199,182 +360,154 @@
       transform: translateY(0);
     }
   }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .action-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .title-main {
+      font-size: 2rem;
+      padding: 20px 30px;
+    }
+    
+    .container {
+      padding: 20px 15px;
+    }
+    
+    .hero-text {
+      padding: 25px;
+    }
+  }
 </style>
 </head>
 <body>
-<!-- Top-right account button matching mission.html style -->
-<button class="top-btn" id="accountBtn">
-  <img src="accimg.png" alt="Account">
-</button>
+  <!-- Industrial Overlay -->
+  <div class="industrial-overlay"></div>
 
-<!-- Popup overlay -->
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup">
-    <div id="popupContent"></div>
+  <!-- Top-right account button -->
+  <button class="top-btn" id="menuBtn">
+    <img src="accimg.png" alt="Account">
+  </button>
+
+  <!-- Popup -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <div id="popupContent"></div>
+    </div>
   </div>
-</div>
 
-<div class="container">
-  <h2 id="formTitle">Login</h2>
+  <!-- Main Content -->
+  <div class="container">
+    <div class="header">
+      <div class="title-container">
+        <div class="title-backdrop"></div>
+        <h1 class="title-main">Welcome Comrades</h1>
+      </div>
+      <p class="subtitle">Building People's Power • Community Solidarity • Collective Action</p>
+    </div>
 
-  <!-- LOGIN FORM -->
-  <form id="loginForm">
-    <input id="loginIdentifier" type="text" placeholder="Username or email" required />
-    <input id="loginPassword" type="password" placeholder="Password" required />
-    <button type="submit" class="btn-white">Login</button>
-  </form>
+    <div class="hero-section">
+      <div class="hero-text">
+        <p>Welcome to our organizing hub - a digital space dedicated to building working class power and community solidarity in Pueblo.</p>
+        <p>We are neighbors, workers, and community members united by our belief in a society that puts people before profit.</p>
+        <p>Through mutual aid, direct action, and collective organizing, we're building the world we want to see - from the ground up.</p>
+      </div>
+    </div>
 
-  <!-- SIGNUP FORM -->
-  <form id="signupForm" style="display:none; margin-top:10px;">
-    <input id="signupUsername" type="text" placeholder="Username" required />
-    <input id="signupEmail" type="email" placeholder="Email" required />
-    <input id="signupPassword" type="password" placeholder="Password" required />
-    <button id="signupBtn" type="submit" class="btn-primary">Create Account</button>
-  </form>
+    <div class="action-grid">
+      <div class="action-card">
+        <div class="action-icon">🤝</div>
+        <h3 class="action-title">Mutual Aid</h3>
+        <p class="action-description">Food distribution, resource sharing, and community support networks that meet people's needs directly.</p>
+      </div>
+      
+      <div class="action-card">
+        <div class="action-icon">📢</div>
+        <h3 class="action-title">Organizing</h3>
+        <p class="action-description">Building workplace and community power through education, outreach, and collective action.</p>
+      </div>
+      
+      <div class="action-card">
+        <div class="action-icon">🏘️</div>
+        <h3 class="action-title">Community Defense</h3>
+        <p class="action-description">Protecting our neighbors from displacement, exploitation, and state violence through solidarity.</p>
+      </div>
+      
+      <div class="action-card">
+        <div class="action-icon">📚</div>
+        <h3 class="action-title">Education</h3>
+        <p class="action-description">Political education programs, skill shares, and study groups to develop working class consciousness.</p>
+      </div>
+    </div>
 
-  <div class="toggle" id="toggleForm">Don't have an account? Sign up</div>
-  <div class="note" id="noteText"></div>
-</div>
+    <div class="join-section">
+      <h2 class="join-title">Ready to Organize?</h2>
+      <a href="mission.html" class="join-button">Learn Our Mission</a>
+    </div>
 
-<script>
-const USERS_KEY = "users";
-const LOGGED_IN_KEY = "loggedInUser";
+    <!-- Page Navigator -->
+    <div class="page-navigator">
+      <div class="navigator-arrow left-arrow" style="visibility: hidden;">
+        <span class="arrow-icon">←</span>
+      </div>
+      <div class="navigator-arrow right-arrow" onclick="location.href='mission.html'">
+        <span class="arrow-icon">→</span>
+      </div>
+    </div>
+  </div>
 
-// Read users from localStorage
-function readUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-  } catch(e) {
-    return [];
-  }
-}
+  <script>
+    const key = "loggedInUser";
+    const overlay = document.getElementById("popupOverlay");
+    const popup = document.getElementById("popupContent");
 
-// Save users to localStorage
-function writeUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
+    function updatePopup() {
+      popup.innerHTML = "";
+      const user = JSON.parse(localStorage.getItem(key));
+      if (user) {
+        popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">Logged in as: ${user.username}${user.role === "admin" ? " (admin)" : ""}</div>`;
+        const btn = document.createElement("button");
+        btn.textContent = "Logout";
+        btn.className = "close-popup";
+        btn.onclick = () => {
+          localStorage.removeItem(key);
+          location.reload();
+        };
+        popup.appendChild(btn);
+        
+        // Add close button
+        const closeBtn = document.createElement("button");
+        closeBtn.textContent = "Close";
+        closeBtn.className = "close-popup";
+        closeBtn.onclick = () => overlay.style.display = "none";
+        popup.appendChild(closeBtn);
+      } else {
+        popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">You are not currently logged in.</div>`;
+        const loginBtn = document.createElement("button");
+        loginBtn.textContent = "Login / Sign Up";
+        loginBtn.className = "close-popup";
+        loginBtn.onclick = () => location.href = "login.html";
+        popup.appendChild(loginBtn);
+        
+        // Add close button
+        const closeBtn = document.createElement("button");
+        closeBtn.textContent = "Close";
+        closeBtn.className = "close-popup";
+        closeBtn.onclick = () => overlay.style.display = "none";
+        popup.appendChild(closeBtn);
+      }
+    }
 
-// Update UI depending on existing users
-function updateUI() {
-  const users = readUsers();
-  const hasUsers = users.length > 0;
-  const signupForm = document.getElementById("signupForm");
-  const toggleForm = document.getElementById("toggleForm");
-  const noteText = document.getElementById("noteText");
-
-  if(!hasUsers) {
-    // No users yet: show signup, explain first account becomes admin
-    signupForm.style.display = "block";
-    toggleForm.style.display = "none";
-    noteText.innerText = "First account created will be admin.";
-    document.getElementById("formTitle").innerText = "Sign up";
-  } else {
-    // Users exist: show login first
-    signupForm.style.display = "none";
-    toggleForm.style.display = "block";
-    noteText.innerText = "";
-    document.getElementById("formTitle").innerText = "Login";
-  }
-}
-
-// LOGIN HANDLER
-document.getElementById("loginForm").addEventListener("submit", function(evt) {
-  evt.preventDefault();
-  const identifier = document.getElementById("loginIdentifier").value.trim();
-  const password = document.getElementById("loginPassword").value;
-  const users = readUsers();
-  const user = users.find(u => (u.username === identifier || u.email === identifier) && u.password === password);
-  if(user) {
-    localStorage.setItem(LOGGED_IN_KEY, JSON.stringify(user));
-    alert("Welcome back, " + user.username + (user.role === "admin" ? " (admin)" : "") + "!");
-    window.location.href = "index.html";
-  } else {
-    alert("Invalid username/email or password.");
-  }
-});
-
-// SIGNUP HANDLER
-document.getElementById("signupForm").addEventListener("submit", function(evt) {
-  evt.preventDefault();
-  const username = document.getElementById("signupUsername").value.trim();
-  const email = document.getElementById("signupEmail").value.trim();
-  const password = document.getElementById("signupPassword").value;
-
-  if(!username || !email || !password) {
-    alert("Please enter all fields.");
-    return;
-  }
-
-  const users = readUsers();
-  if(users.find(u => u.username === username || u.email === email)) {
-    alert("Username or email already exists.");
-    return;
-  }
-
-  // First user becomes admin, others are normal users
-  const role = users.length === 0 ? "admin" : "user";
-  users.push({username, email, password, role});
-  writeUsers(users);
-  alert("Account created. You can now log in.");
-  document.getElementById("signupForm").reset();
-  updateUI();
-});
-
-// TOGGLE FORM DISPLAY
-document.getElementById("toggleForm").addEventListener("click", function() {
-  const signupForm = document.getElementById("signupForm");
-  const loginForm = document.getElementById("loginForm");
-  const formTitle = document.getElementById("formTitle");
-  const toggleForm = document.getElementById("toggleForm");
-
-  if(signupForm.style.display === "none" || signupForm.style.display === "") {
-    signupForm.style.display = "block";
-    loginForm.style.display = "none";
-    formTitle.innerText = "Sign up";
-    toggleForm.innerText = "Already have an account? Login";
-  } else {
-    signupForm.style.display = "none";
-    loginForm.style.display = "block";
-    formTitle.innerText = "Login";
-    toggleForm.innerText = "Don't have an account? Sign up";
-  }
-});
-
-// Account button functionality with centered close button
-const overlay = document.getElementById("popupOverlay");
-const popup = document.getElementById("popupContent");
-
-function updatePopup() {
-  popup.innerHTML = "";
-  const user = JSON.parse(localStorage.getItem(LOGGED_IN_KEY));
-  if (user) {
-    popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">Logged in as: ${user.username}${user.role === "admin" ? " (admin)" : ""}</div>`;
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = "Close";
-    closeBtn.className = "centered-close";
-    closeBtn.onclick = () => overlay.style.display = "none";
-    popup.appendChild(closeBtn);
-  } else {
-    popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">You are not currently logged in.</div>`;
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = "Close";
-    closeBtn.className = "centered-close";
-    closeBtn.onclick = () => overlay.style.display = "none";
-    popup.appendChild(closeBtn);
-  }
-}
-
-document.getElementById("accountBtn").onclick = () => {
-  updatePopup();
-  overlay.style.display = "flex";
-};
-
-overlay.onclick = e => {
-  if (e.target === overlay) overlay.style.display = "none";
-};
-
-// initial UI setup
-updateUI();
-</script>
+    document.getElementById("menuBtn").onclick = () => {
+      updatePopup();
+      overlay.style.display = "flex";
+    };
+    
+    overlay.onclick = e => {
+      if (e.target === overlay) overlay.style.display = "none";
+    };
+  </script>
 </body>
 </html>
