@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Home | Organize</title>
+<meta charset="UTF-8">
+<title>Organize - Hub</title>
 <style>
   :root {
     --red: #e63946;
@@ -14,30 +13,21 @@
     --gray: #8d99ae;
   }
   
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
   body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                url("SteelMillWrk.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: var(--light);
     margin: 0;
-    padding: 0;
-    min-height: 100vh;
+    font-family: 'Roboto', Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url("pueblo.jpg") center/cover no-repeat fixed;
+    opacity: 0;
+    animation: fadeInBg 2s forwards;
+    color: var(--light);
     position: relative;
-    line-height: 1.6;
   }
 
   /* Industrial pattern overlay */
@@ -54,9 +44,45 @@
     z-index: -1;
   }
 
+  /* Logo with mission.html aesthetic */
+  .logo {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 10;
+  }
+  
+  .logo-inner {
+    position: relative;
+    background: var(--red);
+    padding: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    border: 2px solid var(--yellow);
+  }
+  
+  .logo-inner img {
+    width: 150px;
+    display: block;
+  }
+  
+  .logo-inner::before, .logo-inner::after {
+    content: "";
+    position: absolute;
+    inset: -15px;
+    background: var(--dark-blue);
+    z-index: -2;
+  }
+  
+  .logo-inner::after {
+    inset: -8px;
+    background: var(--dark-red);
+    z-index: -1;
+  }
+
   /* Top-right button */
   .top-btn {
-    position: fixed;
+    position: absolute;
     top: 25px;
     right: 25px;
     width: 65px;
@@ -74,8 +100,8 @@
   }
   
   .top-btn img {
-    width: 70%;
-    height: 70%;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     pointer-events: none;
     border-radius: 50%;
@@ -115,215 +141,107 @@
   }
   
   .close-popup {
-    position: static;
-    display: block;
-    margin: 20px auto 0;
-    background: var(--red);
-    color: white;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
     border: none;
-    padding: 12px 30px;
-    border-radius: 4px;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
-    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    color: var(--light);
     transition: 0.2s;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .close-popup:hover {
+    color: var(--red);
+    transform: scale(1.2);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .popup button {
+    width: 50%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    background: var(--red);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.2s;
+    color: var(--light);
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
   
-  .close-popup:hover {
+  .popup button:hover {
     background: var(--dark-red);
-    transform: scale(1.05);
     box-shadow: 0 0 10px var(--red);
   }
 
-  /* Main Container */
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    position: relative;
-    z-index: 10;
-    text-align: center;
+  /* Main content with mission.html aesthetic */
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
   }
-
-  /* Header Section */
-  .header {
-    margin-bottom: 60px;
-    position: relative;
-  }
-
-  .title-container {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 20px;
+  
+  .main-content img {
+    width: 700px;
+    max-width: 90vw;
+    border: 5px solid var(--yellow);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 2s 0.8s forwards;
     opacity: 0;
-    animation: fadeIn 1s ease forwards;
   }
-
-  .title-backdrop {
-    position: absolute;
-    top: -15px;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    background: var(--dark-blue);
-    z-index: 1;
-    transform: rotate(-1deg);
-  }
-
-  .title-main {
-    position: relative;
+  
+  h1 {
     background: var(--red);
-    padding: 25px 50px;
-    z-index: 3;
-    display: inline-block;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     color: var(--light);
-    font-size: 2.5rem;
+    display: inline-block;
+    padding: 25px 50px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    margin: 0;
+    animation: fadeIn 2s 1.2s forwards;
+    opacity: 0;
+    font-size: 2.2rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
     border: 2px solid var(--yellow);
-  }
-
-  .subtitle {
-    font-size: 1.3rem;
-    color: var(--yellow);
-    max-width: 600px;
-    margin: 0 auto;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.3s forwards;
-    font-weight: 300;
-    letter-spacing: 1px;
-  }
-
-  /* Hero Section */
-  .hero-section {
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.6s forwards;
-  }
-
-  .hero-text {
-    background: rgba(29, 53, 87, 0.9);
-    border-left: 5px solid var(--red);
-    padding: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    text-align: left;
     position: relative;
-    margin-bottom: 30px;
   }
-
-  .hero-text::before {
-    content: "⚒";
+  
+  h1::before {
+    content: "";
     position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 2rem;
-    color: var(--red);
-    opacity: 0.7;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: var(--dark-blue);
+    z-index: -1;
+    transform: rotate(-1deg);
   }
 
-  .hero-text p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 2;
-    margin-left: 40px;
-  }
-
-  /* Action Grid */
-  .action-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.9s forwards;
-  }
-
-  .action-card {
-    background: rgba(29, 53, 87, 0.9);
-    padding: 30px 20px;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-    border-top: 5px solid var(--red);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  }
-
-  .action-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  }
-
-  .action-icon {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: var(--yellow);
-  }
-
-  .action-title {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    color: var(--light);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .action-description {
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
-  }
-
-  /* Join Section */
-  .join-section {
-    text-align: center;
-    margin-bottom: 60px;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.2s forwards;
-  }
-
-  .join-title {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    color: var(--yellow);
-  }
-
-  .join-button {
-    display: inline-block;
-    padding: 15px 40px;
-    background: var(--red);
-    color: var(--light);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.3s;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--yellow);
-  }
-
-  .join-button:hover {
-    background: var(--dark-red);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Page Navigator */
-  .page-navigator {
+  /* Navigator with mission.html aesthetic */
+  .navigator {
+    position: absolute;
+    bottom: 30px;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 50px;
-    margin-top: 40px;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.5s forwards;
   }
-
-  .navigator-arrow {
+  
+  .arrow {
     width: 60px;
     height: 60px;
     display: flex;
@@ -336,20 +254,40 @@
     transition: all 0.3s;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
-
-  .navigator-arrow:hover {
-    transform: scale(1.1);
-    background: var(--dark-red);
-    box-shadow: 0 0 20px var(--red);
-  }
-
-  .arrow-icon {
+  
+  .arrow::after {
+    content: "→";
     font-size: 1.5rem;
     color: var(--light);
     font-weight: bold;
   }
+  
+  .arrow:hover {
+    transform: scale(1.1);
+    background: var(--dark-red);
+    box-shadow: 0 0 20px var(--red);
+  }
+  
+  .dots {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--light);
+    opacity: 0.6;
+    transition: 0.2s;
+  }
+  
+  .dots .active {
+    opacity: 1;
+    transform: scale(1.3);
+    background: var(--yellow);
+  }
 
-  /* Animations */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -360,24 +298,10 @@
       transform: translateY(0);
     }
   }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .action-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .title-main {
-      font-size: 2rem;
-      padding: 20px 30px;
-    }
-    
-    .container {
-      padding: 20px 15px;
-    }
-    
-    .hero-text {
-      padding: 25px;
+  
+  @keyframes fadeInBg {
+    to {
+      opacity: 1;
     }
   }
 </style>
@@ -386,75 +310,34 @@
   <!-- Industrial Overlay -->
   <div class="industrial-overlay"></div>
 
-  <!-- Top-right account button -->
+  <div class="logo">
+    <div class="logo-inner">
+      <img src="ACP.png" alt="ACP Logo">
+    </div>
+  </div>
+  
   <button class="top-btn" id="menuBtn">
     <img src="accimg.png" alt="Account">
   </button>
-
-  <!-- Popup -->
+  
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
+      <button class="close-popup" id="closePopup">&times;</button>
       <div id="popupContent"></div>
     </div>
   </div>
-
-  <!-- Main Content -->
-  <div class="container">
-    <div class="header">
-      <div class="title-container">
-        <div class="title-backdrop"></div>
-        <h1 class="title-main">Welcome Comrades</h1>
-      </div>
-      <p class="subtitle">Building People's Power • Community Solidarity • Collective Action</p>
-    </div>
-
-    <div class="hero-section">
-      <div class="hero-text">
-        <p>Welcome to our organizing hub - a digital space dedicated to building working class power and community solidarity in Pueblo.</p>
-        <p>We are neighbors, workers, and community members united by our belief in a society that puts people before profit.</p>
-        <p>Through mutual aid, direct action, and collective organizing, we're building the world we want to see - from the ground up.</p>
-      </div>
-    </div>
-
-    <div class="action-grid">
-      <div class="action-card">
-        <div class="action-icon">🤝</div>
-        <h3 class="action-title">Mutual Aid</h3>
-        <p class="action-description">Food distribution, resource sharing, and community support networks that meet people's needs directly.</p>
-      </div>
-      
-      <div class="action-card">
-        <div class="action-icon">📢</div>
-        <h3 class="action-title">Organizing</h3>
-        <p class="action-description">Building workplace and community power through education, outreach, and collective action.</p>
-      </div>
-      
-      <div class="action-card">
-        <div class="action-icon">🏘️</div>
-        <h3 class="action-title">Community Defense</h3>
-        <p class="action-description">Protecting our neighbors from displacement, exploitation, and state violence through solidarity.</p>
-      </div>
-      
-      <div class="action-card">
-        <div class="action-icon">📚</div>
-        <h3 class="action-title">Education</h3>
-        <p class="action-description">Political education programs, skill shares, and study groups to develop working class consciousness.</p>
-      </div>
-    </div>
-
-    <div class="join-section">
-      <h2 class="join-title">Ready to Organize?</h2>
-      <a href="mission.html" class="join-button">Learn Our Mission</a>
-    </div>
-
-    <!-- Page Navigator -->
-    <div class="page-navigator">
-      <div class="navigator-arrow left-arrow" style="visibility: hidden;">
-        <span class="arrow-icon">←</span>
-      </div>
-      <div class="navigator-arrow right-arrow" onclick="location.href='mission.html'">
-        <span class="arrow-icon">→</span>
-      </div>
+  
+  <div class="main-content">
+    <img src="strongwoman2.png" alt="Strong Woman">
+    <h1>Let's Build a Stronger Community, Together!</h1>
+  </div>
+  
+  <div class="navigator">
+    <div class="arrow" onclick="location.href='mission.html'"></div>
+    <div class="dots">
+      <span class="active"></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
 
@@ -470,33 +353,16 @@
         popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">Logged in as: ${user.username}${user.role === "admin" ? " (admin)" : ""}</div>`;
         const btn = document.createElement("button");
         btn.textContent = "Logout";
-        btn.className = "close-popup";
         btn.onclick = () => {
           localStorage.removeItem(key);
           location.reload();
         };
         popup.appendChild(btn);
-        
-        // Add close button
-        const closeBtn = document.createElement("button");
-        closeBtn.textContent = "Close";
-        closeBtn.className = "close-popup";
-        closeBtn.onclick = () => overlay.style.display = "none";
-        popup.appendChild(closeBtn);
       } else {
-        popup.innerHTML = `<div style="margin-bottom: 20px; font-size: 1.2rem;">You are not currently logged in.</div>`;
-        const loginBtn = document.createElement("button");
-        loginBtn.textContent = "Login / Sign Up";
-        loginBtn.className = "close-popup";
-        loginBtn.onclick = () => location.href = "login.html";
-        popup.appendChild(loginBtn);
-        
-        // Add close button
-        const closeBtn = document.createElement("button");
-        closeBtn.textContent = "Close";
-        closeBtn.className = "close-popup";
-        closeBtn.onclick = () => overlay.style.display = "none";
-        popup.appendChild(closeBtn);
+        const btn = document.createElement("button");
+        btn.textContent = "Login / Sign Up";
+        btn.onclick = () => location.href = "login.html";
+        popup.appendChild(btn);
       }
     }
 
@@ -504,7 +370,7 @@
       updatePopup();
       overlay.style.display = "flex";
     };
-    
+    document.getElementById("closePopup").onclick = () => overlay.style.display = "none";
     overlay.onclick = e => {
       if (e.target === overlay) overlay.style.display = "none";
     };
