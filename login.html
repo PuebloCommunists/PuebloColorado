@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login | Organize</title>
 <style>
+  :root { --red: #e63946; --dark-red: #c1121f; --yellow: #ffd166; --dark-blue: #1d3557; --light: #f1faee; }
   body { font-family: Arial, Helvetica, sans-serif; background: linear-gradient(135deg,#ff5252,#000); height:100vh; margin:0; display:flex; align-items:center; justify-content:center; color:white; }
   .container { width:360px; padding:2rem; border-radius:12px; background: rgba(255,255,255,0.06); box-shadow:0 6px 24px rgba(0,0,0,0.4); text-align:center; }
   h2 { margin:0 0 1rem 0; color:white; }
@@ -17,6 +18,7 @@
   .note { margin-top:8px; font-size:0.85rem; color:#eee; opacity:0.9; }
   .create-account-btn { background:transparent; border:1px solid #fff; color:white; margin-top:5px; }
   .error-message { color: #ff6b6b; font-size:0.85rem; margin-top:5px; display:none; }
+  .success-message { color: var(--yellow); font-size:0.9rem; margin-top:10px; padding:10px; background:rgba(255,209,102,0.1); border-radius:5px; }
 </style>
 </head>
 <body>
@@ -35,11 +37,14 @@
 
   <!-- SIGNUP FORM (Hidden by default) -->
   <form id="signupForm" style="display:none; margin-top:10px;">
-    <input id="signupUsername" type="text" placeholder="Username" required />
-    <input id="signupEmail" type="email" placeholder="Email" required />
-    <input id="signupPassword" type="password" placeholder="Password" required />
+    <input id="signupUsername" type="text" placeholder="Choose Username" required />
+    <input id="signupEmail" type="email" placeholder="Your Email" required />
+    <input id="signupPassword" type="password" placeholder="Create Password" required />
     <div class="error-message" id="signupError"></div>
-    <button id="signupBtn" type="submit" class="btn-primary">Create Account</button>
+    <div class="success-message" id="signupSuccess" style="display:none;">
+      ✅ Registration submitted! We'll review and activate your account soon.
+    </div>
+    <button id="signupBtn" type="submit" class="btn-primary">Submit Registration</button>
     <div class="toggle" id="backToLogin">← Back to Login</div>
   </form>
 
@@ -47,17 +52,17 @@
 </div>
 
 <script>
-// Google Sheets setup
-const SHEET_ID = '1HWG_fy9G4BmX7I2TompW2rltgXzGQh3-6O4yjlkCDCk';
-const SHEET_NAME = 'Sheet1';
+// Simple local storage for pending registrations
+const PENDING_USERS_KEY = "pendingUsers";
+const ACTIVE_USERS_KEY = "activeUsers";
+const LOGGED_IN_KEY = "loggedInUser";
 
-// SECURITY: Password hashing functions
+// Password hashing
 function generateSalt() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 function hashPassword(password, salt) {
-  // Simple but effective hashing - much better than plain text
   let hash = 0;
   const combined = password + salt;
   for (let i = 0; i < combined.length; i++) {
@@ -65,7 +70,6 @@ function hashPassword(password, salt) {
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash;
   }
-  // Add multiple rounds and include salt in final hash
   for (let i = 0; i < 1000; i++) {
     hash = ((hash << 5) - hash) + salt.charCodeAt(i % salt.length);
     hash = hash & hash;
@@ -78,64 +82,46 @@ function verifyPassword(password, salt, storedHash) {
   return testHash === storedHash;
 }
 
-// Google Sheets API functions
-async function appendUserToSheet(userData) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:F:append?valueInputOption=RAW`;
-  
-  const values = [
-    [
-      userData.username,
-      userData.email,
-      userData.passwordHash, // STORE HASHED PASSWORD
-      userData.salt,         // STORE SALT
-      userData.role,
-      new Date().toISOString()
-    ]
-  ];
-  
+// Local storage functions
+function readPendingUsers() {
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ values })
-    });
-    return response.ok;
-  } catch (error) {
-    console.error('Error saving to sheet:', error);
-    return false;
+    return JSON.parse(localStorage.getItem(PENDING_USERS_KEY)) || [];
+  } catch(e) {
+    return [];
   }
 }
 
-async function getUsersFromSheet() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:F`;
-  
+function readActiveUsers() {
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.values) {
-      return data.values.map(row => ({
-        username: row[0],
-        email: row[1],
-        passwordHash: row[2], // READ HASHED PASSWORD
-        salt: row[3],         // READ SALT
-        role: row[4],
-        timestamp: row[5]
-      }));
-    }
-    return [];
-  } catch (error) {
-    console.error('Error reading from sheet:', error);
+    return JSON.parse(localStorage.getItem(ACTIVE_USERS_KEY)) || [];
+  } catch(e) {
     return [];
   }
+}
+
+function savePendingUser(userData) {
+  const pendingUsers = readPendingUsers();
+  pendingUsers.push({
+    ...userData,
+    id: Date.now(),
+    status: 'pending',
+    submittedAt: new Date().toISOString()
+  });
+  localStorage.setItem(PENDING_USERS_KEY, JSON.stringify(pendingUsers));
+  return true;
+}
+
+function saveActiveUser(userData) {
+  const activeUsers = readActiveUsers();
+  activeUsers.push(userData);
+  localStorage.setItem(ACTIVE_USERS_KEY, JSON.stringify(activeUsers));
+  return true;
 }
 
 // Update UI
 async function updateUI() {
-  const users = await getUsersFromSheet();
-  const hasUsers = users.length > 0;
+  const activeUsers = readActiveUsers();
+  const hasUsers = activeUsers.length > 0;
   const noteText = document.getElementById("noteText");
 
   if(!hasUsers) {
@@ -153,6 +139,7 @@ function showLoginForm() {
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('formTitle').innerText = 'Login';
   document.getElementById('signupError').style.display = 'none';
+  document.getElementById('signupSuccess').style.display = 'none';
   document.getElementById('signupForm').reset();
 }
 
@@ -162,18 +149,23 @@ function showSignupForm() {
   document.getElementById('signupForm').style.display = 'block';
   document.getElementById('formTitle').innerText = 'Create Account';
   document.getElementById('signupError').style.display = 'none';
+  document.getElementById('signupSuccess').style.display = 'none';
 }
 
 // Check if username or email already exists
-async function isDuplicateAccount(username, email) {
-  const users = await getUsersFromSheet();
-  return users.some(user => 
+function isDuplicateAccount(username, email) {
+  const activeUsers = readActiveUsers();
+  const pendingUsers = readPendingUsers();
+  
+  const allUsers = [...activeUsers, ...pendingUsers];
+  
+  return allUsers.some(user => 
     user.username.toLowerCase() === username.toLowerCase() || 
     user.email.toLowerCase() === email.toLowerCase()
   );
 }
 
-// SECURE LOGIN HANDLER
+// LOGIN HANDLER (only active users can login)
 document.getElementById("loginForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const loginBtn = document.getElementById('loginBtn');
@@ -182,12 +174,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   const identifier = document.getElementById("loginIdentifier").value.trim();
   const password = document.getElementById("loginPassword").value;
-  const users = await getUsersFromSheet();
+  const activeUsers = readActiveUsers();
   
-  // SECURITY: Verify hashed password
-  const user = users.find(u => 
+  const user = activeUsers.find(u => 
     (u.username === identifier || u.email === identifier) && 
-    verifyPassword(password, u.salt, u.passwordHash) // VERIFY PASSWORD SECURELY
+    verifyPassword(password, u.salt, u.passwordHash)
   );
   
   if(user) {
@@ -195,36 +186,37 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
       username: user.username,
       email: user.email,
       role: user.role
-      // DON'T store password in localStorage
     }));
     alert("Welcome back, " + user.username + (user.role === "admin" ? " (admin)" : "") + "!");
     window.location.href = "index.html";
   } else {
-    alert("Invalid username/email or password.");
+    alert("Invalid username/email or password, or account not yet activated.");
   }
   
   loginBtn.textContent = 'Login';
   loginBtn.disabled = false;
 });
 
-// SECURE SIGNUP HANDLER
+// SIGNUP HANDLER (saves to pending registrations)
 document.getElementById("signupForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const signupBtn = document.getElementById('signupBtn');
-  signupBtn.textContent = 'Creating Account...';
+  signupBtn.textContent = 'Submitting...';
   signupBtn.disabled = true;
 
   const username = document.getElementById("signupUsername").value.trim();
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value;
   const errorElement = document.getElementById("signupError");
+  const successElement = document.getElementById("signupSuccess");
 
   errorElement.style.display = 'none';
+  successElement.style.display = 'none';
 
   if(!username || !email || !password) {
     errorElement.textContent = "Please enter all fields.";
     errorElement.style.display = 'block';
-    signupBtn.textContent = 'Create Account';
+    signupBtn.textContent = 'Submit Registration';
     signupBtn.disabled = false;
     return;
   }
@@ -232,44 +224,45 @@ document.getElementById("signupForm").addEventListener("submit", async function(
   if(await isDuplicateAccount(username, email)) {
     errorElement.textContent = "Username or email already exists. Please choose different credentials.";
     errorElement.style.display = 'block';
-    signupBtn.textContent = 'Create Account';
+    signupBtn.textContent = 'Submit Registration';
     signupBtn.disabled = false;
     return;
   }
 
-  const users = await getUsersFromSheet();
-  const adminExists = users.some(user => user.role === "admin");
+  const activeUsers = readActiveUsers();
+  const adminExists = activeUsers.some(user => user.role === "admin");
   const role = adminExists ? "user" : "admin";
   
-  // SECURITY: Hash password before storing
+  // Hash password and save to pending registrations
   const salt = generateSalt();
   const passwordHash = hashPassword(password, salt);
   
   const userData = { 
     username, 
     email, 
-    passwordHash, // STORE HASHED PASSWORD
-    salt,          // STORE SALT
-    role 
+    passwordHash,
+    salt, 
+    role,
+    rawPassword: password // For you to see what they entered
   };
   
-  const success = await appendUserToSheet(userData);
+  const success = savePendingUser(userData);
   
   if(success) {
-    if(role === "admin") {
-      alert("Admin account created successfully! You can now log in.");
-    } else {
-      alert("Account created successfully! You can now log in.");
-    }
+    successElement.style.display = 'block';
+    document.getElementById("signupForm").reset();
+    
+    // Auto-return to login after 3 seconds
+    setTimeout(() => {
+      showLoginForm();
+      updateUI();
+    }, 3000);
   } else {
-    alert("Error creating account. Please try again.");
+    errorElement.textContent = "Error submitting registration. Please try again.";
+    errorElement.style.display = 'block';
   }
   
-  document.getElementById("signupForm").reset();
-  showLoginForm();
-  updateUI();
-  
-  signupBtn.textContent = 'Create Account';
+  signupBtn.textContent = 'Submit Registration';
   signupBtn.disabled = false;
 });
 
@@ -282,6 +275,29 @@ document.getElementById("createAccountBtn").addEventListener("click", function()
 document.getElementById("backToLogin").addEventListener("click", function() {
   showLoginForm();
 });
+
+// ADMIN FUNCTION: View pending registrations (add this to your admin panel)
+function getPendingRegistrations() {
+  return readPendingUsers();
+}
+
+// ADMIN FUNCTION: Approve a user (add this to your admin panel)
+function approveUser(userId) {
+  const pendingUsers = readPendingUsers();
+  const activeUsers = readActiveUsers();
+  
+  const userIndex = pendingUsers.findIndex(u => u.id === userId);
+  if (userIndex !== -1) {
+    const user = pendingUsers[userIndex];
+    // Remove raw password before making active
+    const { rawPassword, id, status, submittedAt, ...cleanUser } = user;
+    saveActiveUser(cleanUser);
+    pendingUsers.splice(userIndex, 1);
+    localStorage.setItem(PENDING_USERS_KEY, JSON.stringify(pendingUsers));
+    return true;
+  }
+  return false;
+}
 
 // initial UI setup
 updateUI();
