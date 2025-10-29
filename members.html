@@ -47,7 +47,7 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 /* Page Navigator */
 .page-navigator { display: flex; align-items: center; justify-content: center; gap: 60px; margin-top: 60px; }
 .navigator-arrow { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background: var(--red); border: 2px solid var(--yellow); 
-                   border-radius: 50%; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+                   border-radius: 50%; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 .navigator-arrow:hover { transform: scale(1.1); background: var(--dark-red); box-shadow: 0 0 25px var(--red); }
 
 /* Enhanced Popup */
@@ -177,11 +177,14 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 </div>
 
 <script>
-const key = "loggedInUser", overlay = document.getElementById("popupOverlay"), popup = document.getElementById("popupContent");
+const key = "loggedInUser";
+const USERS_KEY = "users"; // Make sure this matches login.html
+const overlay = document.getElementById("popupOverlay");
+const popup = document.getElementById("popupContent");
 
-// Get current user and users data
+// Get current user and users data - using the correct key
 const currentUser = JSON.parse(localStorage.getItem(key));
-const users = JSON.parse(localStorage.getItem('users')) || [];
+const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
 
 // Update member count for everyone
 document.getElementById('memberCount').innerText = users.length;
@@ -192,6 +195,7 @@ if (currentUser && currentUser.role === 'admin') {
   document.getElementById('publicMessage').style.display = 'none';
 
   const ul = document.getElementById('memberListUL');
+  ul.innerHTML = ''; // Clear any existing list
   users.forEach(user => {
     const li = document.createElement('li');
     li.innerHTML = `<strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>`;
