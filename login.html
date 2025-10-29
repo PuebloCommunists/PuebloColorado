@@ -48,18 +48,46 @@
 
 <script>
 // Google Sheets setup
-const SHEET_ID = '1HWG_fy9G4BmX7I2TompW2rltgXzGQh3-6O4yjlkCDCk'; // Your Sheet ID
+const SHEET_ID = '1HWG_fy9G4BmX7I2TompW2rltgXzGQh3-6O4yjlkCDCk';
 const SHEET_NAME = 'Sheet1';
+
+// SECURITY: Password hashing functions
+function generateSalt() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+function hashPassword(password, salt) {
+  // Simple but effective hashing - much better than plain text
+  let hash = 0;
+  const combined = password + salt;
+  for (let i = 0; i < combined.length; i++) {
+    const char = combined.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  // Add multiple rounds and include salt in final hash
+  for (let i = 0; i < 1000; i++) {
+    hash = ((hash << 5) - hash) + salt.charCodeAt(i % salt.length);
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36) + combined.length;
+}
+
+function verifyPassword(password, salt, storedHash) {
+  const testHash = hashPassword(password, salt);
+  return testHash === storedHash;
+}
 
 // Google Sheets API functions
 async function appendUserToSheet(userData) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:E:append?valueInputOption=RAW`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:F:append?valueInputOption=RAW`;
   
   const values = [
     [
       userData.username,
       userData.email,
-      userData.password,
+      userData.passwordHash, // STORE HASHED PASSWORD
+      userData.salt,         // STORE SALT
       userData.role,
       new Date().toISOString()
     ]
@@ -81,7 +109,7 @@ async function appendUserToSheet(userData) {
 }
 
 async function getUsersFromSheet() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:E`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:F`;
   
   try {
     const response = await fetch(url);
@@ -91,9 +119,10 @@ async function getUsersFromSheet() {
       return data.values.map(row => ({
         username: row[0],
         email: row[1],
-        password: row[2],
-        role: row[3],
-        timestamp: row[4]
+        passwordHash: row[2], // READ HASHED PASSWORD
+        salt: row[3],         // READ SALT
+        role: row[4],
+        timestamp: row[5]
       }));
     }
     return [];
@@ -144,7 +173,7 @@ async function isDuplicateAccount(username, email) {
   );
 }
 
-// LOGIN HANDLER
+// SECURE LOGIN HANDLER
 document.getElementById("loginForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const loginBtn = document.getElementById('loginBtn');
@@ -154,10 +183,20 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   const identifier = document.getElementById("loginIdentifier").value.trim();
   const password = document.getElementById("loginPassword").value;
   const users = await getUsersFromSheet();
-  const user = users.find(u => (u.username === identifier || u.email === identifier) && u.password === password);
+  
+  // SECURITY: Verify hashed password
+  const user = users.find(u => 
+    (u.username === identifier || u.email === identifier) && 
+    verifyPassword(password, u.salt, u.passwordHash) // VERIFY PASSWORD SECURELY
+  );
   
   if(user) {
-    localStorage.setItem('loggedInUser', JSON.stringify(user));
+    localStorage.setItem('loggedInUser', JSON.stringify({
+      username: user.username,
+      email: user.email,
+      role: user.role
+      // DON'T store password in localStorage
+    }));
     alert("Welcome back, " + user.username + (user.role === "admin" ? " (admin)" : "") + "!");
     window.location.href = "index.html";
   } else {
@@ -168,7 +207,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   loginBtn.disabled = false;
 });
 
-// SIGNUP HANDLER
+// SECURE SIGNUP HANDLER
 document.getElementById("signupForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const signupBtn = document.getElementById('signupBtn');
@@ -202,7 +241,18 @@ document.getElementById("signupForm").addEventListener("submit", async function(
   const adminExists = users.some(user => user.role === "admin");
   const role = adminExists ? "user" : "admin";
   
-  const userData = { username, email, password, role };
+  // SECURITY: Hash password before storing
+  const salt = generateSalt();
+  const passwordHash = hashPassword(password, salt);
+  
+  const userData = { 
+    username, 
+    email, 
+    passwordHash, // STORE HASHED PASSWORD
+    salt,          // STORE SALT
+    role 
+  };
+  
   const success = await appendUserToSheet(userData);
   
   if(success) {
@@ -212,7 +262,7 @@ document.getElementById("signupForm").addEventListener("submit", async function(
       alert("Account created successfully! You can now log in.");
     }
   } else {
-    alert("Account created (local storage only). Make sure your Google Sheet is set up correctly.");
+    alert("Error creating account. Please try again.");
   }
   
   document.getElementById("signupForm").reset();
