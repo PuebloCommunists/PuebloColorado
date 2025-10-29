@@ -19,6 +19,7 @@
   .create-account-btn { background:transparent; border:1px solid #fff; color:white; margin-top:5px; }
   .error-message { color: #ff6b6b; font-size:0.85rem; margin-top:5px; display:none; }
   .success-message { color: var(--yellow); font-size:0.9rem; margin-top:10px; padding:10px; background:rgba(255,209,102,0.1); border-radius:5px; }
+  .sync-status { font-size:0.8rem; color:#aaa; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -49,13 +50,57 @@
   </form>
 
   <div class="note" id="noteText"></div>
+  <div class="sync-status" id="syncStatus">🔄 Connecting to server...</div>
 </div>
 
 <script>
-// Simple local storage for pending registrations
-const PENDING_USERS_KEY = "pendingUsers";
-const ACTIVE_USERS_KEY = "activeUsers";
-const LOGGED_IN_KEY = "loggedInUser";
+// Secure API calls to Netlify function
+async function loadUsersFromServer() {
+  try {
+    const response = await fetch('/.netlify/functions/users');
+    if (!response.ok) throw new Error('Server load failed');
+    const data = await response.json();
+    document.getElementById('syncStatus').textContent = '✅ Connected to server';
+    return data;
+  } catch (error) {
+    document.getElementById('syncStatus').textContent = '❌ Offline mode (using local storage)';
+    console.error('Server load failed:', error);
+    return loadUsersFromLocal();
+  }
+}
+
+async function saveUsersToServer(usersData) {
+  try {
+    const response = await fetch('/.netlify/functions/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(usersData)
+    });
+    
+    if (!response.ok) throw new Error('Server save failed');
+    
+    document.getElementById('syncStatus').textContent = '✅ Changes saved to server';
+    return true;
+  } catch (error) {
+    document.getElementById('syncStatus').textContent = '❌ Save failed (using local storage)';
+    console.error('Server save failed:', error);
+    saveUsersToLocal(usersData);
+    return false;
+  }
+}
+
+// Local storage fallback
+function loadUsersFromLocal() {
+  try {
+    return JSON.parse(localStorage.getItem('acpUsers')) || { activeUsers: [], pendingUsers: [] };
+  } catch(e) {
+    return { activeUsers: [], pendingUsers: [] };
+  }
+}
+
+function saveUsersToLocal(usersData) {
+  localStorage.setItem('acpUsers', JSON.stringify(usersData));
+}
 
 // Password hashing
 function generateSalt() {
@@ -82,46 +127,10 @@ function verifyPassword(password, salt, storedHash) {
   return testHash === storedHash;
 }
 
-// Local storage functions
-function readPendingUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(PENDING_USERS_KEY)) || [];
-  } catch(e) {
-    return [];
-  }
-}
-
-function readActiveUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(ACTIVE_USERS_KEY)) || [];
-  } catch(e) {
-    return [];
-  }
-}
-
-function savePendingUser(userData) {
-  const pendingUsers = readPendingUsers();
-  pendingUsers.push({
-    ...userData,
-    id: Date.now(),
-    status: 'pending',
-    submittedAt: new Date().toISOString()
-  });
-  localStorage.setItem(PENDING_USERS_KEY, JSON.stringify(pendingUsers));
-  return true;
-}
-
-function saveActiveUser(userData) {
-  const activeUsers = readActiveUsers();
-  activeUsers.push(userData);
-  localStorage.setItem(ACTIVE_USERS_KEY, JSON.stringify(activeUsers));
-  return true;
-}
-
 // Update UI
 async function updateUI() {
-  const activeUsers = readActiveUsers();
-  const hasUsers = activeUsers.length > 0;
+  const usersData = await loadUsersFromServer();
+  const hasUsers = usersData.activeUsers.length > 0 || usersData.pendingUsers.length > 0;
   const noteText = document.getElementById("noteText");
 
   if(!hasUsers) {
@@ -153,11 +162,9 @@ function showSignupForm() {
 }
 
 // Check if username or email already exists
-function isDuplicateAccount(username, email) {
-  const activeUsers = readActiveUsers();
-  const pendingUsers = readPendingUsers();
-  
-  const allUsers = [...activeUsers, ...pendingUsers];
+async function isDuplicateAccount(username, email) {
+  const usersData = await loadUsersFromServer();
+  const allUsers = [...usersData.activeUsers, ...usersData.pendingUsers];
   
   return allUsers.some(user => 
     user.username.toLowerCase() === username.toLowerCase() || 
@@ -165,7 +172,7 @@ function isDuplicateAccount(username, email) {
   );
 }
 
-// LOGIN HANDLER (only active users can login)
+// LOGIN HANDLER
 document.getElementById("loginForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const loginBtn = document.getElementById('loginBtn');
@@ -174,9 +181,9 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   const identifier = document.getElementById("loginIdentifier").value.trim();
   const password = document.getElementById("loginPassword").value;
-  const activeUsers = readActiveUsers();
+  const usersData = await loadUsersFromServer();
   
-  const user = activeUsers.find(u => 
+  const user = usersData.activeUsers.find(u => 
     (u.username === identifier || u.email === identifier) && 
     verifyPassword(password, u.salt, u.passwordHash)
   );
@@ -197,7 +204,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   loginBtn.disabled = false;
 });
 
-// SIGNUP HANDLER (saves to pending registrations)
+// SIGNUP HANDLER
 document.getElementById("signupForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const signupBtn = document.getElementById('signupBtn');
@@ -229,11 +236,11 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     return;
   }
 
-  const activeUsers = readActiveUsers();
-  const adminExists = activeUsers.some(user => user.role === "admin");
+  const usersData = await loadUsersFromServer();
+  const adminExists = usersData.activeUsers.some(user => user.role === "admin");
   const role = adminExists ? "user" : "admin";
   
-  // Hash password and save to pending registrations
+  // Hash password
   const salt = generateSalt();
   const passwordHash = hashPassword(password, salt);
   
@@ -243,10 +250,13 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     passwordHash,
     salt, 
     role,
-    rawPassword: password // For you to see what they entered
+    rawPassword: password,
+    timestamp: new Date().toISOString()
   };
   
-  const success = savePendingUser(userData);
+  // Add to pending and save
+  usersData.pendingUsers.push(userData);
+  const success = await saveUsersToServer(usersData);
   
   if(success) {
     successElement.style.display = 'block';
@@ -275,29 +285,6 @@ document.getElementById("createAccountBtn").addEventListener("click", function()
 document.getElementById("backToLogin").addEventListener("click", function() {
   showLoginForm();
 });
-
-// ADMIN FUNCTION: View pending registrations (add this to your admin panel)
-function getPendingRegistrations() {
-  return readPendingUsers();
-}
-
-// ADMIN FUNCTION: Approve a user (add this to your admin panel)
-function approveUser(userId) {
-  const pendingUsers = readPendingUsers();
-  const activeUsers = readActiveUsers();
-  
-  const userIndex = pendingUsers.findIndex(u => u.id === userId);
-  if (userIndex !== -1) {
-    const user = pendingUsers[userIndex];
-    // Remove raw password before making active
-    const { rawPassword, id, status, submittedAt, ...cleanUser } = user;
-    saveActiveUser(cleanUser);
-    pendingUsers.splice(userIndex, 1);
-    localStorage.setItem(PENDING_USERS_KEY, JSON.stringify(pendingUsers));
-    return true;
-  }
-  return false;
-}
 
 // initial UI setup
 updateUI();
