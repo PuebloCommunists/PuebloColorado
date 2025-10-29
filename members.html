@@ -22,27 +22,47 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 .subtitle { font-size: 1.3rem; color: var(--yellow); max-width: 600px; margin: 0 auto 50px; font-weight: 300; letter-spacing: 1px; }
 
 /* Member Stats */
-.member-stats { margin-bottom: 60px; }
-.stat-card { background: rgba(29,53,87,0.9); padding: 40px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); display: inline-block; border-top: 5px solid var(--red); }
-.stat-number { font-size: 3.5rem; font-weight: bold; color: var(--yellow); margin-bottom: 15px; line-height: 1; }
-.stat-label { font-size: 1.3rem; color: var(--light); text-transform: uppercase; letter-spacing: 1.5px; }
+.member-stats { margin-bottom: 60px; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+.stat-card { background: rgba(29,53,87,0.9); padding: 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); display: inline-block; border-top: 5px solid var(--red); min-width: 200px; }
+.stat-number { font-size: 2.5rem; font-weight: bold; color: var(--yellow); margin-bottom: 10px; line-height: 1; }
+.stat-label { font-size: 1.1rem; color: var(--light); text-transform: uppercase; letter-spacing: 1px; }
 
 /* Public Message */
 .public-message { background: rgba(29,53,87,0.9); padding: 40px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); text-align: center; border-top: 5px solid var(--yellow); margin-bottom: 50px; max-width: 800px; }
 .public-message p { font-size: 1.2rem; line-height: 1.7; color: var(--light); margin: 0; }
 
 /* Admin Section */
-.admin-section { margin-bottom: 60px; }
-.admin-card { background: rgba(29,53,87,0.9); padding: 50px 40px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); text-align: left; border-left: 5px solid var(--red); max-width: 800px; margin: 0 auto; }
-.admin-card h2 { color: var(--yellow); margin-bottom: 35px; text-align: center; font-size: 2rem; font-weight: 600; }
+.admin-section { margin-bottom: 60px; width: 100%; }
+.admin-card { background: rgba(29,53,87,0.9); padding: 40px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); text-align: left; border-left: 5px solid var(--red); margin-bottom: 30px; }
+.admin-card h2 { color: var(--yellow); margin-bottom: 25px; text-align: center; font-size: 1.8rem; font-weight: 600; }
+.admin-card h3 { color: var(--yellow); margin: 30px 0 15px 0; font-size: 1.4rem; border-bottom: 2px solid var(--red); padding-bottom: 5px; }
+
 .members-list { list-style: none; margin: 0; }
-.members-list li { padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 1.1rem; line-height: 1.5; }
+.members-list li { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); font-size: 1.1rem; line-height: 1.5; display: flex; justify-content: space-between; align-items: center; }
 .members-list li:last-child { border-bottom: none; }
 .members-list li strong { color: var(--light); font-weight: 600; }
 .members-list li em { color: var(--yellow); font-style: normal; font-weight: 500; }
-.admin-button { display: block; margin: 40px auto 0; padding: 16px 45px; background: var(--red); color: var(--light); border: none; border-radius: 6px; 
-               cursor: pointer; font-weight: 700; text-transform: uppercase; transition: all 0.3s; border: 2px solid var(--yellow); font-size: 1.1rem; letter-spacing: 1px; }
-.admin-button:hover { background: var(--dark-red); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+
+.pending-list { list-style: none; margin: 0; }
+.pending-list li { padding: 15px; border: 1px solid rgba(255,255,255,0.2); border-radius: 5px; margin-bottom: 10px; background: rgba(255,255,255,0.05); }
+.pending-item { display: flex; justify-content: space-between; align-items: center; }
+.pending-info { flex: 1; }
+.pending-actions { display: flex; gap: 10px; }
+.pending-username { color: var(--light); font-weight: 600; font-size: 1.1rem; }
+.pending-email { color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+.pending-date { color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 5px; }
+.pending-password { color: var(--yellow); font-family: monospace; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 3px; margin-top: 5px; font-size: 0.9rem; }
+
+.admin-button { display: block; margin: 30px auto 0; padding: 12px 30px; background: var(--red); color: var(--light); border: none; border-radius: 6px; 
+               cursor: pointer; font-weight: 700; text-transform: uppercase; transition: all 0.3s; border: 2px solid var(--yellow); font-size: 1rem; letter-spacing: 1px; }
+.admin-button:hover { background: var(--dark-red); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+.btn-approve { background: #27ae60; border: none; padding: 8px 15px; border-radius: 4px; color: white; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+.btn-deny { background: #e74c3c; border: none; padding: 8px 15px; border-radius: 4px; color: white; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+.btn-approve:hover { background: #219653; transform: translateY(-1px); }
+.btn-deny:hover { background: #c0392b; transform: translateY(-1px); }
+
+.empty-state { text-align: center; color: rgba(255,255,255,0.6); font-style: italic; padding: 30px; }
 
 /* Page Navigator */
 .page-navigator { display: flex; align-items: center; justify-content: center; gap: 60px; margin-top: 60px; }
@@ -123,10 +143,12 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 @media (max-width: 768px) { 
   .container { padding: 40px 20px; }
   .title-main { font-size: 2rem; padding: 20px 35px; }
-  .admin-card { padding: 35px 25px; }
-  .stat-number { font-size: 3rem; }
+  .admin-card { padding: 25px; }
+  .stat-number { font-size: 2rem; }
   .public-message { padding: 30px; }
   .navigator-arrow { width: 60px; height: 60px; }
+  .pending-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .pending-actions { width: 100%; justify-content: space-between; }
 }
 </style>
 </head>
@@ -149,8 +171,12 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 
   <div class="member-stats">
     <div class="stat-card">
-      <div class="stat-number" id="memberCount">0</div>
-      <div class="stat-label">Total Members</div>
+      <div class="stat-number" id="activeMemberCount">0</div>
+      <div class="stat-label">Active Members</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="pendingMemberCount">0</div>
+      <div class="stat-label">Pending Approval</div>
     </div>
   </div>
 
@@ -159,10 +185,17 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
   </div>
 
   <div class="admin-section" id="adminSection" style="display: none;">
+    <!-- Active Members Card -->
     <div class="admin-card">
-      <h2>All Accounts (Admin Only)</h2>
+      <h2>Active Members</h2>
       <ul class="members-list" id="memberListUL"></ul>
       <button class="admin-button" id="emailButton">Send Email to All Members</button>
+    </div>
+
+    <!-- Pending Approvals Card -->
+    <div class="admin-card">
+      <h2>Pending Registrations</h2>
+      <div id="pendingRegistrationsList"></div>
     </div>
   </div>
 
@@ -178,67 +211,176 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 
 <script>
 const key = "loggedInUser";
-const USERS_KEY = "users"; 
-const SHEET_ID = '1HWG_fy9G4BmX7I2TompW2rltgXzGQh3-6O4yjlkCDCk'; // ADD THIS LINE
+const ACTIVE_USERS_KEY = "activeUsers";
+const PENDING_USERS_KEY = "pendingUsers";
 const overlay = document.getElementById("popupOverlay");
 const popup = document.getElementById("popupContent");
 
-// ADD THIS FUNCTION TO READ FROM GOOGLE SHEETS
-async function getUsersFromSheet() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:F`;
-  
+// Storage functions
+function readActiveUsers() {
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.values) {
-      return data.values.map(row => ({
-        username: row[0],
-        email: row[1],
-        passwordHash: row[2],
-        salt: row[3],
-        role: row[4],
-        timestamp: row[5]
-      }));
-    }
-    return [];
-  } catch (error) {
-    console.error('Error reading from sheet:', error);
+    return JSON.parse(localStorage.getItem(ACTIVE_USERS_KEY)) || [];
+  } catch(e) {
     return [];
   }
 }
 
-// Get current user and users data - UPDATED TO USE GOOGLE SHEETS
+function readPendingUsers() {
+  try {
+    return JSON.parse(localStorage.getItem(PENDING_USERS_KEY)) || [];
+  } catch(e) {
+    return [];
+  }
+}
+
+function saveActiveUsers(users) {
+  localStorage.setItem(ACTIVE_USERS_KEY, JSON.stringify(users));
+}
+
+function savePendingUsers(users) {
+  localStorage.setItem(PENDING_USERS_KEY, JSON.stringify(users));
+}
+
+// Get current user and users data
 const currentUser = JSON.parse(localStorage.getItem(key));
-let users = [];
+const activeUsers = readActiveUsers();
+const pendingUsers = readPendingUsers();
 
-// Load users from Google Sheets
-getUsersFromSheet().then(sheetUsers => {
-  users = sheetUsers;
-  
-  // Update member count for everyone
-  document.getElementById('memberCount').innerText = users.length;
+// Update member counts
+document.getElementById('activeMemberCount').innerText = activeUsers.length;
+document.getElementById('pendingMemberCount').innerText = pendingUsers.length;
 
-  // If current user is admin, show admin section
-  if (currentUser && currentUser.role === 'admin') {
-    document.getElementById('adminSection').style.display = 'block';
-    document.getElementById('publicMessage').style.display = 'none';
+// If current user is admin, show admin section
+if (currentUser && currentUser.role === 'admin') {
+  document.getElementById('adminSection').style.display = 'block';
+  document.getElementById('publicMessage').style.display = 'none';
 
-    const ul = document.getElementById('memberListUL');
-    ul.innerHTML = ''; // Clear any existing list
-    users.forEach(user => {
+  // Display active members
+  const ul = document.getElementById('memberListUL');
+  ul.innerHTML = '';
+  if (activeUsers.length === 0) {
+    ul.innerHTML = '<div class="empty-state">No active members yet</div>';
+  } else {
+    activeUsers.forEach(user => {
       const li = document.createElement('li');
-      li.innerHTML = `<strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>`;
+      li.innerHTML = `
+        <div>
+          <strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>
+        </div>
+        <div style="font-size:0.8rem; color:rgba(255,255,255,0.6);">
+          ${new Date(user.timestamp || Date.now()).toLocaleDateString()}
+        </div>
+      `;
       ul.appendChild(li);
     });
-
-    document.getElementById('emailButton').addEventListener('click', () => {
-      alert('Email functionality would be implemented here to contact all ' + users.length + ' members.');
-    });
   }
-});
 
-// ... rest of your existing members.html JavaScript stays the same ...
+  // Display pending registrations
+  displayPendingRegistrations();
+
+  document.getElementById('emailButton').addEventListener('click', () => {
+    alert('Email functionality would be implemented here to contact all ' + activeUsers.length + ' members.');
+  });
+}
+
+// Display pending registrations
+function displayPendingRegistrations() {
+  const container = document.getElementById('pendingRegistrationsList');
+  const pendingUsers = readPendingUsers();
+  
+  if (pendingUsers.length === 0) {
+    container.innerHTML = '<div class="empty-state">No pending registrations</div>';
+    return;
+  }
+
+  let html = '<ul class="pending-list">';
+  pendingUsers.forEach(user => {
+    html += `
+      <li>
+        <div class="pending-item">
+          <div class="pending-info">
+            <div class="pending-username">${user.username}</div>
+            <div class="pending-email">${user.email}</div>
+            <div class="pending-password">Password: ${user.rawPassword}</div>
+            <div class="pending-date">Submitted: ${new Date(user.submittedAt).toLocaleString()}</div>
+          </div>
+          <div class="pending-actions">
+            <button class="btn-approve" onclick="approveUser(${user.id})">Approve</button>
+            <button class="btn-deny" onclick="denyUser(${user.id})">Deny</button>
+          </div>
+        </div>
+      </li>
+    `;
+  });
+  html += '</ul>';
+  container.innerHTML = html;
+}
+
+// Approve a user
+function approveUser(userId) {
+  const pendingUsers = readPendingUsers();
+  const activeUsers = readActiveUsers();
+  
+  const userIndex = pendingUsers.findIndex(u => u.id === userId);
+  if (userIndex !== -1) {
+    const user = pendingUsers[userIndex];
+    
+    // Remove sensitive data before making active
+    const { rawPassword, id, status, submittedAt, ...cleanUser } = user;
+    cleanUser.timestamp = new Date().toISOString();
+    
+    // Add to active users
+    activeUsers.push(cleanUser);
+    saveActiveUsers(activeUsers);
+    
+    // Remove from pending
+    pendingUsers.splice(userIndex, 1);
+    savePendingUsers(pendingUsers);
+    
+    // Update UI
+    document.getElementById('activeMemberCount').innerText = activeUsers.length;
+    document.getElementById('pendingMemberCount').innerText = pendingUsers.length;
+    displayPendingRegistrations();
+    
+    // Update active members list
+    const ul = document.getElementById('memberListUL');
+    ul.innerHTML = '';
+    activeUsers.forEach(user => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div>
+          <strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>
+        </div>
+        <div style="font-size:0.8rem; color:rgba(255,255,255,0.6);">
+          ${new Date(user.timestamp).toLocaleDateString()}
+        </div>
+      `;
+      ul.appendChild(li);
+    });
+    
+    alert(`User ${cleanUser.username} approved successfully!`);
+  }
+}
+
+// Deny a user
+function denyUser(userId) {
+  const pendingUsers = readPendingUsers();
+  const userIndex = pendingUsers.findIndex(u => u.id === userId);
+  
+  if (userIndex !== -1) {
+    const username = pendingUsers[userIndex].username;
+    pendingUsers.splice(userIndex, 1);
+    savePendingUsers(pendingUsers);
+    
+    // Update UI
+    document.getElementById('pendingMemberCount').innerText = pendingUsers.length;
+    displayPendingRegistrations();
+    
+    alert(`Registration for ${username} denied.`);
+  }
+}
+
+// Popup functionality
 function updatePopup() {
   const user = JSON.parse(localStorage.getItem(key));
   
