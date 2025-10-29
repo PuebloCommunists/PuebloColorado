@@ -15,20 +15,8 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 .top-btn:hover { box-shadow: 0 0 20px var(--red), 0 0 30px var(--red); transform: scale(1.1); background: var(--dark-red); }
 .top-btn img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .logo { position: absolute; top: 40px; left: 40px; z-index: 10; }
-.logo-inner { position: relative; background: white; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: inline-block; border: 2px solid var(--yellow); }
+.logo-inner { background: white; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: inline-block; border: 2px solid var(--yellow); border-radius: 5px; }
 .logo-inner img { width: 150px; display: block; }
-.logo-inner::before, .logo-inner::after {
-  content: "";
-  position: absolute;
-  inset: -15px;
-  background: var(--dark-blue);
-  z-index: -2;
-}
-.logo-inner::after {
-  inset: -8px;
-  background: var(--dark-red);
-  z-index: -1;
-}
 .main-content { display: flex; flex-direction: column; align-items: center; gap: 40px; }
 .main-content img { width: 700px; max-width: 90vw; border: 5px solid var(--yellow); box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
 h1 { background: var(--red); color: var(--light); display: inline-block; padding: 25px 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); margin: 0; 
