@@ -210,114 +210,44 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 </div>
 
 <script>
-const key = "loggedInUser";
-const ACTIVE_USERS_KEY = "activeUsers";
-const PENDING_USERS_KEY = "pendingUsers";
-const overlay = document.getElementById("popupOverlay");
-const popup = document.getElementById("popupContent");
+const SERVER_URL = 'http://localhost:3000'; // Same as login.html
 
-// Storage functions
-function readActiveUsers() {
+// Sync with server
+async function syncWithServer() {
   try {
-    return JSON.parse(localStorage.getItem(ACTIVE_USERS_KEY)) || [];
-  } catch(e) {
-    return [];
+    const response = await fetch(`${SERVER_URL}/users`);
+    if (response.ok) {
+      const serverData = await response.json();
+      
+      // Merge server data with local data (server wins conflicts)
+      const localActive = readActiveUsers();
+      const localPending = readPendingUsers();
+      
+      // Simple merge - in production you'd want more sophisticated conflict resolution
+      const mergedActive = [...new Map([
+        ...serverData.activeUsers.map(user => [user.id, user]),
+        ...localActive.map(user => [user.id, user])
+      ]).values()];
+      
+      const mergedPending = [...new Map([
+        ...serverData.pendingUsers.map(user => [user.id, user]),
+        ...localPending.map(user => [user.id, user])
+      ]).values()];
+      
+      saveActiveUsers(mergedActive);
+      savePendingUsers(mergedPending);
+      
+      console.log('✅ Synced with server');
+      return true;
+    }
+  } catch (error) {
+    console.log('❌ Server sync failed, using local data');
   }
+  return false;
 }
 
-function readPendingUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(PENDING_USERS_KEY)) || [];
-  } catch(e) {
-    return [];
-  }
-}
-
-function saveActiveUsers(users) {
-  localStorage.setItem(ACTIVE_USERS_KEY, JSON.stringify(users));
-}
-
-function savePendingUsers(users) {
-  localStorage.setItem(PENDING_USERS_KEY, JSON.stringify(users));
-}
-
-// Get current user and users data
-const currentUser = JSON.parse(localStorage.getItem(key));
-const activeUsers = readActiveUsers();
-const pendingUsers = readPendingUsers();
-
-// Update member counts
-document.getElementById('activeMemberCount').innerText = activeUsers.length;
-document.getElementById('pendingMemberCount').innerText = pendingUsers.length;
-
-// If current user is admin, show admin section
-if (currentUser && currentUser.role === 'admin') {
-  document.getElementById('adminSection').style.display = 'block';
-  document.getElementById('publicMessage').style.display = 'none';
-
-  // Display active members
-  const ul = document.getElementById('memberListUL');
-  ul.innerHTML = '';
-  if (activeUsers.length === 0) {
-    ul.innerHTML = '<div class="empty-state">No active members yet</div>';
-  } else {
-    activeUsers.forEach(user => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <div>
-          <strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>
-        </div>
-        <div style="font-size:0.8rem; color:rgba(255,255,255,0.6);">
-          ${new Date(user.timestamp || Date.now()).toLocaleDateString()}
-        </div>
-      `;
-      ul.appendChild(li);
-    });
-  }
-
-  // Display pending registrations
-  displayPendingRegistrations();
-
-  document.getElementById('emailButton').addEventListener('click', () => {
-    alert('Email functionality would be implemented here to contact all ' + activeUsers.length + ' members.');
-  });
-}
-
-// Display pending registrations
-function displayPendingRegistrations() {
-  const container = document.getElementById('pendingRegistrationsList');
-  const pendingUsers = readPendingUsers();
-  
-  if (pendingUsers.length === 0) {
-    container.innerHTML = '<div class="empty-state">No pending registrations</div>';
-    return;
-  }
-
-  let html = '<ul class="pending-list">';
-  pendingUsers.forEach(user => {
-    html += `
-      <li>
-        <div class="pending-item">
-          <div class="pending-info">
-            <div class="pending-username">${user.username}</div>
-            <div class="pending-email">${user.email}</div>
-            <div class="pending-password">Password: ${user.rawPassword}</div>
-            <div class="pending-date">Submitted: ${new Date(user.submittedAt).toLocaleString()}</div>
-          </div>
-          <div class="pending-actions">
-            <button class="btn-approve" onclick="approveUser(${user.id})">Approve</button>
-            <button class="btn-deny" onclick="denyUser(${user.id})">Deny</button>
-          </div>
-        </div>
-      </li>
-    `;
-  });
-  html += '</ul>';
-  container.innerHTML = html;
-}
-
-// Approve a user
-function approveUser(userId) {
+// Update your existing functions to optionally sync with server
+async function approveUser(userId) {
   const pendingUsers = readPendingUsers();
   const activeUsers = readActiveUsers();
   
@@ -326,7 +256,7 @@ function approveUser(userId) {
     const user = pendingUsers[userIndex];
     
     // Remove sensitive data before making active
-    const { rawPassword, id, status, submittedAt, ...cleanUser } = user;
+    const { rawPassword, id, submittedAt, ...cleanUser } = user;
     cleanUser.timestamp = new Date().toISOString();
     
     // Add to active users
@@ -337,7 +267,18 @@ function approveUser(userId) {
     pendingUsers.splice(userIndex, 1);
     savePendingUsers(pendingUsers);
     
-    // Update UI
+    // Try to sync with server
+    try {
+      await fetch(`${SERVER_URL}/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+    } catch (error) {
+      console.log('Server approval sync failed');
+    }
+    
+    // Update UI (your existing code)
     document.getElementById('activeMemberCount').innerText = activeUsers.length;
     document.getElementById('pendingMemberCount').innerText = pendingUsers.length;
     displayPendingRegistrations();
@@ -362,65 +303,8 @@ function approveUser(userId) {
   }
 }
 
-// Deny a user
-function denyUser(userId) {
-  const pendingUsers = readPendingUsers();
-  const userIndex = pendingUsers.findIndex(u => u.id === userId);
-  
-  if (userIndex !== -1) {
-    const username = pendingUsers[userIndex].username;
-    pendingUsers.splice(userIndex, 1);
-    savePendingUsers(pendingUsers);
-    
-    // Update UI
-    document.getElementById('pendingMemberCount').innerText = pendingUsers.length;
-    displayPendingRegistrations();
-    
-    alert(`Registration for ${username} denied.`);
-  }
-}
-
-// Popup functionality
-function updatePopup() {
-  const user = JSON.parse(localStorage.getItem(key));
-  
-  if (user) {
-    popup.innerHTML = `
-      <div class="popup-content">
-        Welcome back, <strong>${user.username}</strong>${user.role === "admin" ? " <span style='color:var(--yellow);'>(Admin)</span>" : ""}
-      </div>
-      <div class="popup-divider"></div>
-      <button onclick="location.href='members.html'">Member Portal</button>
-      <button onclick="logout()">Logout</button>
-    `;
-  } else {
-    popup.innerHTML = `
-      <div class="popup-content">
-        Join Our Movement
-      </div>
-      <div style="margin-bottom:20px;color:rgba(255,255,255,0.8);font-size:0.95rem;">
-        Access member features and contribute to our community
-      </div>
-      <button onclick="location.href='login.html'">Login / Sign Up</button>
-      <div class="popup-divider"></div>
-      <button onclick="overlay.style.display='none'" style="background:transparent;border:2px solid var(--red);">
-        Continue Browsing
-      </button>
-    `;
-  }
-}
-
-function logout() {
-  localStorage.removeItem(key);
-  location.reload();
-}
-
-document.getElementById("menuBtn").onclick = () => { 
-  updatePopup(); 
-  overlay.style.display = "flex"; 
-};
-
-overlay.onclick = e => { if (e.target === overlay) overlay.style.display = "none"; };
+// Call sync when page loads
+syncWithServer();
 </script>
 </body>
 </html>

@@ -54,10 +54,12 @@
 </div>
 
 <script>
-// Secure API calls to Netlify function
+const SERVER_URL = 'http://localhost:3000'; // Change to your server IP if needed
+
+// Server API calls
 async function loadUsersFromServer() {
   try {
-    const response = await fetch('/.netlify/functions/users');
+    const response = await fetch(`${SERVER_URL}/users`);
     if (!response.ok) throw new Error('Server load failed');
     const data = await response.json();
     document.getElementById('syncStatus').textContent = '✅ Connected to server';
@@ -71,7 +73,7 @@ async function loadUsersFromServer() {
 
 async function saveUsersToServer(usersData) {
   try {
-    const response = await fetch('/.netlify/functions/users', {
+    const response = await fetch(`${SERVER_URL}/users`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(usersData)
@@ -89,7 +91,7 @@ async function saveUsersToServer(usersData) {
   }
 }
 
-// Local storage fallback
+// Local storage fallback (same as before)
 function loadUsersFromLocal() {
   try {
     return JSON.parse(localStorage.getItem('acpUsers')) || { activeUsers: [], pendingUsers: [] };
@@ -102,7 +104,7 @@ function saveUsersToLocal(usersData) {
   localStorage.setItem('acpUsers', JSON.stringify(usersData));
 }
 
-// Password hashing
+// Password hashing (same as before)
 function generateSalt() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
@@ -127,7 +129,7 @@ function verifyPassword(password, salt, storedHash) {
   return testHash === storedHash;
 }
 
-// Update UI
+// Update UI (same as before)
 async function updateUI() {
   const usersData = await loadUsersFromServer();
   const hasUsers = usersData.activeUsers.length > 0 || usersData.pendingUsers.length > 0;
@@ -172,7 +174,7 @@ async function isDuplicateAccount(username, email) {
   );
 }
 
-// LOGIN HANDLER
+// LOGIN HANDLER - UPDATED FOR DIRECT SERVER LOGIN
 document.getElementById("loginForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const loginBtn = document.getElementById('loginBtn');
@@ -181,30 +183,51 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
   const identifier = document.getElementById("loginIdentifier").value.trim();
   const password = document.getElementById("loginPassword").value;
-  const usersData = await loadUsersFromServer();
-  
-  const user = usersData.activeUsers.find(u => 
-    (u.username === identifier || u.email === identifier) && 
-    verifyPassword(password, u.salt, u.passwordHash)
-  );
-  
-  if(user) {
-    localStorage.setItem('loggedInUser', JSON.stringify({
-      username: user.username,
-      email: user.email,
-      role: user.role
-    }));
-    alert("Welcome back, " + user.username + (user.role === "admin" ? " (admin)" : "") + "!");
-    window.location.href = "index.html";
-  } else {
-    alert("Invalid username/email or password, or account not yet activated.");
+
+  try {
+    const response = await fetch(`${SERVER_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: identifier, password })
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      // Store user session
+      localStorage.setItem('loggedInUser', JSON.stringify(result.user));
+      alert("Welcome back, " + result.user.username + (result.user.role === "admin" ? " (admin)" : "") + "!");
+      window.location.href = "index.html";
+    } else {
+      alert(result.error || "Login failed");
+    }
+  } catch (error) {
+    alert("Server connection failed. Trying local login...");
+    // Fallback to local login
+    const usersData = await loadUsersFromServer();
+    const user = usersData.activeUsers.find(u => 
+      (u.username === identifier || u.email === identifier) && 
+      verifyPassword(password, u.salt, u.passwordHash)
+    );
+    
+    if(user) {
+      localStorage.setItem('loggedInUser', JSON.stringify({
+        username: user.username,
+        email: user.email,
+        role: user.role
+      }));
+      alert("Welcome back, " + user.username + (user.role === "admin" ? " (admin)" : "") + "!");
+      window.location.href = "index.html";
+    } else {
+      alert("Invalid username/email or password, or account not yet activated.");
+    }
   }
   
   loginBtn.textContent = 'Login';
   loginBtn.disabled = false;
 });
 
-// SIGNUP HANDLER
+// SIGNUP HANDLER - UPDATED FOR DIRECT SERVER REGISTRATION
 document.getElementById("signupForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
   const signupBtn = document.getElementById('signupBtn');
@@ -228,47 +251,30 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     return;
   }
 
-  if(await isDuplicateAccount(username, email)) {
-    errorElement.textContent = "Username or email already exists. Please choose different credentials.";
-    errorElement.style.display = 'block';
-    signupBtn.textContent = 'Submit Registration';
-    signupBtn.disabled = false;
-    return;
-  }
+  try {
+    const response = await fetch(`${SERVER_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password })
+    });
 
-  const usersData = await loadUsersFromServer();
-  const adminExists = usersData.activeUsers.some(user => user.role === "admin");
-  const role = adminExists ? "user" : "admin";
-  
-  // Hash password
-  const salt = generateSalt();
-  const passwordHash = hashPassword(password, salt);
-  
-  const userData = { 
-    username, 
-    email, 
-    passwordHash,
-    salt, 
-    role,
-    rawPassword: password,
-    timestamp: new Date().toISOString()
-  };
-  
-  // Add to pending and save
-  usersData.pendingUsers.push(userData);
-  const success = await saveUsersToServer(usersData);
-  
-  if(success) {
-    successElement.style.display = 'block';
-    document.getElementById("signupForm").reset();
-    
-    // Auto-return to login after 3 seconds
-    setTimeout(() => {
-      showLoginForm();
-      updateUI();
-    }, 3000);
-  } else {
-    errorElement.textContent = "Error submitting registration. Please try again.";
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      successElement.style.display = 'block';
+      document.getElementById("signupForm").reset();
+      
+      // Auto-return to login after 3 seconds
+      setTimeout(() => {
+        showLoginForm();
+        updateUI();
+      }, 3000);
+    } else {
+      errorElement.textContent = result.error || "Registration failed";
+      errorElement.style.display = 'block';
+    }
+  } catch (error) {
+    errorElement.textContent = "Server connection failed. Please try again.";
     errorElement.style.display = 'block';
   }
   
