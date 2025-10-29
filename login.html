@@ -27,7 +27,7 @@
   <form id="loginForm">
     <input id="loginIdentifier" type="text" placeholder="Username or email" required />
     <input id="loginPassword" type="password" placeholder="Password" required />
-    <button type="submit" class="btn-white">Login</button>
+    <button type="submit" class="btn-white" id="loginBtn">Login</button>
   </form>
 
   <!-- CREATE ACCOUNT BUTTON -->
@@ -47,35 +47,72 @@
 </div>
 
 <script>
-const USERS_KEY = "users";
-const LOGGED_IN_KEY = "loggedInUser";
+// Google Sheets setup
+const SHEET_ID = '1HWG_fy9G4BmX7I2TompW2rltgXzGQh3-6O4yjlkCDCk'; // Your Sheet ID
+const SHEET_NAME = 'Sheet1';
 
-// Read users from localStorage
-function readUsers() {
+// Google Sheets API functions
+async function appendUserToSheet(userData) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:E:append?valueInputOption=RAW`;
+  
+  const values = [
+    [
+      userData.username,
+      userData.email,
+      userData.password,
+      userData.role,
+      new Date().toISOString()
+    ]
+  ];
+  
   try {
-    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-  } catch(e) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ values })
+    });
+    return response.ok;
+  } catch (error) {
+    console.error('Error saving to sheet:', error);
+    return false;
+  }
+}
+
+async function getUsersFromSheet() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:E`;
+  
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (data.values) {
+      return data.values.map(row => ({
+        username: row[0],
+        email: row[1],
+        password: row[2],
+        role: row[3],
+        timestamp: row[4]
+      }));
+    }
+    return [];
+  } catch (error) {
+    console.error('Error reading from sheet:', error);
     return [];
   }
 }
 
-// Save users to localStorage
-function writeUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-// Update UI depending on existing users
-function updateUI() {
-  const users = readUsers();
+// Update UI
+async function updateUI() {
+  const users = await getUsersFromSheet();
   const hasUsers = users.length > 0;
   const noteText = document.getElementById("noteText");
 
   if(!hasUsers) {
-    // No users yet: automatically show signup form
     showSignupForm();
     noteText.innerText = "First account created will be admin.";
   } else {
-    // Users exist: show login first (default)
     showLoginForm();
     noteText.innerText = "";
   }
@@ -99,8 +136,8 @@ function showSignupForm() {
 }
 
 // Check if username or email already exists
-function isDuplicateAccount(username, email) {
-  const users = readUsers();
+async function isDuplicateAccount(username, email) {
+  const users = await getUsersFromSheet();
   return users.some(user => 
     user.username.toLowerCase() === username.toLowerCase() || 
     user.email.toLowerCase() === email.toLowerCase()
@@ -108,63 +145,82 @@ function isDuplicateAccount(username, email) {
 }
 
 // LOGIN HANDLER
-document.getElementById("loginForm").addEventListener("submit", function(evt) {
+document.getElementById("loginForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
+  const loginBtn = document.getElementById('loginBtn');
+  loginBtn.textContent = 'Logging in...';
+  loginBtn.disabled = true;
+
   const identifier = document.getElementById("loginIdentifier").value.trim();
   const password = document.getElementById("loginPassword").value;
-  const users = readUsers();
+  const users = await getUsersFromSheet();
   const user = users.find(u => (u.username === identifier || u.email === identifier) && u.password === password);
+  
   if(user) {
-    localStorage.setItem(LOGGED_IN_KEY, JSON.stringify(user));
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
     alert("Welcome back, " + user.username + (user.role === "admin" ? " (admin)" : "") + "!");
     window.location.href = "index.html";
   } else {
     alert("Invalid username/email or password.");
   }
+  
+  loginBtn.textContent = 'Login';
+  loginBtn.disabled = false;
 });
 
 // SIGNUP HANDLER
-document.getElementById("signupForm").addEventListener("submit", function(evt) {
+document.getElementById("signupForm").addEventListener("submit", async function(evt) {
   evt.preventDefault();
+  const signupBtn = document.getElementById('signupBtn');
+  signupBtn.textContent = 'Creating Account...';
+  signupBtn.disabled = true;
+
   const username = document.getElementById("signupUsername").value.trim();
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value;
   const errorElement = document.getElementById("signupError");
 
-  // Clear previous errors
   errorElement.style.display = 'none';
 
   if(!username || !email || !password) {
     errorElement.textContent = "Please enter all fields.";
     errorElement.style.display = 'block';
+    signupBtn.textContent = 'Create Account';
+    signupBtn.disabled = false;
     return;
   }
 
-  // Check for duplicate accounts
-  if(isDuplicateAccount(username, email)) {
+  if(await isDuplicateAccount(username, email)) {
     errorElement.textContent = "Username or email already exists. Please choose different credentials.";
     errorElement.style.display = 'block';
+    signupBtn.textContent = 'Create Account';
+    signupBtn.disabled = false;
     return;
   }
 
-  const users = readUsers();
-  
-  // Check if admin already exists - if so, new users are always "user" role
+  const users = await getUsersFromSheet();
   const adminExists = users.some(user => user.role === "admin");
   const role = adminExists ? "user" : "admin";
   
-  users.push({username, email, password, role});
-  writeUsers(users);
+  const userData = { username, email, password, role };
+  const success = await appendUserToSheet(userData);
   
-  if(role === "admin") {
-    alert("Admin account created successfully! You can now log in.");
+  if(success) {
+    if(role === "admin") {
+      alert("Admin account created successfully! You can now log in.");
+    } else {
+      alert("Account created successfully! You can now log in.");
+    }
   } else {
-    alert("Account created successfully! You can now log in.");
+    alert("Account created (local storage only). Make sure your Google Sheet is set up correctly.");
   }
   
   document.getElementById("signupForm").reset();
   showLoginForm();
   updateUI();
+  
+  signupBtn.textContent = 'Create Account';
+  signupBtn.disabled = false;
 });
 
 // CREATE ACCOUNT BUTTON HANDLER
