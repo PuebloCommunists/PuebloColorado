@@ -178,35 +178,67 @@ body { font-family: 'Roboto', Arial; min-height: 100vh; display: flex; flex-dire
 
 <script>
 const key = "loggedInUser";
-const USERS_KEY = "users"; // Make sure this matches login.html
+const USERS_KEY = "users"; 
+const SHEET_ID = '1HWG_fy9G4BmX7I2TompW2rltgXzGQh3-6O4yjlkCDCk'; // ADD THIS LINE
 const overlay = document.getElementById("popupOverlay");
 const popup = document.getElementById("popupContent");
 
-// Get current user and users data - using the correct key
-const currentUser = JSON.parse(localStorage.getItem(key));
-const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-
-// Update member count for everyone
-document.getElementById('memberCount').innerText = users.length;
-
-// If current user is admin, show admin section
-if (currentUser && currentUser.role === 'admin') {
-  document.getElementById('adminSection').style.display = 'block';
-  document.getElementById('publicMessage').style.display = 'none';
-
-  const ul = document.getElementById('memberListUL');
-  ul.innerHTML = ''; // Clear any existing list
-  users.forEach(user => {
-    const li = document.createElement('li');
-    li.innerHTML = `<strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>`;
-    ul.appendChild(li);
-  });
-
-  document.getElementById('emailButton').addEventListener('click', () => {
-    alert('Email functionality would be implemented here to contact all ' + users.length + ' members.');
-  });
+// ADD THIS FUNCTION TO READ FROM GOOGLE SHEETS
+async function getUsersFromSheet() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:F`;
+  
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (data.values) {
+      return data.values.map(row => ({
+        username: row[0],
+        email: row[1],
+        passwordHash: row[2],
+        salt: row[3],
+        role: row[4],
+        timestamp: row[5]
+      }));
+    }
+    return [];
+  } catch (error) {
+    console.error('Error reading from sheet:', error);
+    return [];
+  }
 }
 
+// Get current user and users data - UPDATED TO USE GOOGLE SHEETS
+const currentUser = JSON.parse(localStorage.getItem(key));
+let users = [];
+
+// Load users from Google Sheets
+getUsersFromSheet().then(sheetUsers => {
+  users = sheetUsers;
+  
+  // Update member count for everyone
+  document.getElementById('memberCount').innerText = users.length;
+
+  // If current user is admin, show admin section
+  if (currentUser && currentUser.role === 'admin') {
+    document.getElementById('adminSection').style.display = 'block';
+    document.getElementById('publicMessage').style.display = 'none';
+
+    const ul = document.getElementById('memberListUL');
+    ul.innerHTML = ''; // Clear any existing list
+    users.forEach(user => {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>`;
+      ul.appendChild(li);
+    });
+
+    document.getElementById('emailButton').addEventListener('click', () => {
+      alert('Email functionality would be implemented here to contact all ' + users.length + ' members.');
+    });
+  }
+});
+
+// ... rest of your existing members.html JavaScript stays the same ...
 function updatePopup() {
   const user = JSON.parse(localStorage.getItem(key));
   
