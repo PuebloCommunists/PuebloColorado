@@ -160,8 +160,10 @@ const server = http.createServer(async (req, res) => {
 // Start server
 initUsersFile().then(() => {
   server.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ ACP Backend running on port ${PORT}`);
-  console.log(`🌐 Accessible from other devices on your network`);
-  console.log(`📡 Server URL: http://YOUR_LOCAL_IP:${PORT}`);
-});
+    console.log(`✅ ACP Backend running on port ${PORT}`);
+    console.log(`📁 Users stored in: ${path.resolve(USERS_FILE)}`);
+    console.log(`🔐 Sessions stored in: ${path.resolve(SESSIONS_FILE)}`);
+    console.log(`🌐 Accessible from other devices at: http://10.0.0.121:${PORT}`);
+    console.log(`📡 Local access at: http://localhost:${PORT}`);
+  });
 });
